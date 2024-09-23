@@ -13,7 +13,6 @@ function App() {
         setUser(null);
       }
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -35,19 +34,33 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="min-h-screen bg-gray-50 p-5 font-sans pt-12">
       {user ? (
-        <div>
-          <h1>Welcome, {user.displayName}!</h1>
-          <img src={user.photoURL} alt={user.displayName} style={{ borderRadius: '50%' }} />
-          <p>Email: {user.email}</p>
-          <button onClick={handleLogout}>Logout</button>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800">Welcome, {user.displayName}!</h1>
+          <img
+            src={user.photoURL}
+            alt={user.displayName}
+            className="w-24 h-24 mt-5 rounded-full shadow-lg"
+          />
+          <p className="mt-4 text-gray-600">Email: {user.email}</p>
+          <button
+            onClick={handleLogout}
+            className="px-6 py-2 mt-5 text-lg bg-red-500 text-white rounded-lg hover:bg-red-700 transition"
+          >
+            Logout
+          </button>
         </div>
       ) : (
-        <div>
-          <h1>Welcome to DoneTask!</h1>
-          <p>Please log in to continue.</p>
-          <button onClick={handleLogin}>Login with Google</button>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800">Welcome to DoneTask!</h1>
+          <p className="mt-4 text-gray-600">Please log in to continue.</p>
+          <button
+            onClick={handleLogin}
+            className="px-6 py-2 mt-5 text-lg bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Login with Google
+          </button>
         </div>
       )}
     </div>
