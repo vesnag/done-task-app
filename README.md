@@ -1,70 +1,28 @@
-# Getting Started with Create React App
+# DoneTask
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**DoneTask** is a simple, intuitive task management app that helps users keep track of their daily, weekly, and monthly tasks. The app aims to offer smart reminders based on users' habits, allowing them to stay organized and productive without the hassle of manual planning.
 
-## Available Scripts
+### **Project Overview**
+- **Current Features:**
+  - Simple login system using Google Authentication (Firebase).
+  - A welcome message and user profile display once logged in.
+  - A "Login with Google" button for users who are not logged in.
+  - Basic UI with minimal styling, including buttons and profile image handling.
 
-In the project directory, you can run:
+- **Future Plans:**
+  - **Task Management**: Implement the core task management system, allowing users to add, edit, and delete tasks.
+  - **Smart Reminders**: Develop a habit-learning feature that sends personalized task reminders based on when the user typically completes certain tasks.
+  - **Task History & Analytics**: Track completed tasks and display task history with analytics on user habits.
+  - **Notifications**: Set up push notifications for reminders.
+  - **Improved Design**: Enhance the UI/UX with better design and mobile responsiveness.
 
-### `npm start`
+### **Work in Progress**
+This app is still in its early stages, and new features are being actively developed. Future releases will include the task management functionality, reminders, and more.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### **Technologies Used:**
+- **Frontend**: React.js
+- **Backend/Hosting**: Firebase (Firebase Authentication, Firestore, and Hosting)
+- **Deployment**: Firebase Hosting
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Visit the website
+You can visit the website at https://donetask-f64fe.web.app/
