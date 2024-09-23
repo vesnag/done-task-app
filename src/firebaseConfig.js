@@ -1,6 +1,5 @@
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 
-import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 
 // TODO: Add SDKs for Firebase products that you want to use
