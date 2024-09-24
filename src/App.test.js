@@ -4,7 +4,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import App from './App';
 
-// Mock Firebase functions
 jest.mock('firebase/auth', () => ({
   getAuth: jest.fn(() => ({
     currentUser: null,
@@ -12,7 +11,7 @@ jest.mock('firebase/auth', () => ({
   signInWithPopup: jest.fn(),
   signOut: jest.fn(),
   onAuthStateChanged: jest.fn(),
-  GoogleAuthProvider: jest.fn(() => ({})), // Mock GoogleAuthProvider
+  GoogleAuthProvider: jest.fn(() => ({})),
 }));
 
 describe('Google Auth Tests', () => {
@@ -21,9 +20,9 @@ describe('Google Auth Tests', () => {
     signOut.mockClear();
     onAuthStateChanged.mockImplementation((auth, callback) => {
       callback(null);
-      return jest.fn(); // Return a mock unsubscribe function
+      return jest.fn();
     });
-    console.error = jest.fn(); // Mock console.error before each test
+    console.error = jest.fn();
   });
 
   it('should show login button when user is not logged in', () => {
@@ -40,7 +39,7 @@ describe('Google Auth Tests', () => {
   it('should call signOut when logout button is clicked after login', () => {
     onAuthStateChanged.mockImplementation((auth, callback) => {
       callback({ displayName: 'Test User' });
-      return jest.fn(); // Return a mock unsubscribe function
+      return jest.fn();
     });
     render(<App />);
     fireEvent.click(screen.getByText(/Logout/i));
@@ -51,7 +50,7 @@ describe('Google Auth Tests', () => {
     const user = { displayName: 'Test User', email: 'test@example.com', photoURL: 'test-photo-url' };
     onAuthStateChanged.mockImplementation((auth, callback) => {
       callback(user);
-      return jest.fn(); // Return a mock unsubscribe function
+      return jest.fn();
     });
     render(<App />);
     expect(screen.getByText(/Welcome, Test User!/i)).toBeInTheDocument();
