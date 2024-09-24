@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db, googleProvider, messaging } from './firebaseConfig';
-import { doc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { getToken, onMessage } from 'firebase/messaging';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
@@ -8,11 +8,13 @@ import TaskSubmissionForm from './TaskSubmissionForm';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
+        checkNotificationPermission();
       } else {
         setUser(null);
       }
@@ -20,16 +22,24 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  const checkNotificationPermission = () => {
+    if (Notification.permission === 'granted') {
+      setNotificationsEnabled(true);
+    } else {
+      setNotificationsEnabled(false);
+    }
+  };
+
   const handleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       if (result.user) {
-        //requestNotificationPermission(result.user.uid);
+        console.log('User signed in:', result.user);
+        checkNotificationPermission();
       }
     } catch (error) {
       if (error.code === 'auth/popup-closed-by-user') {
         console.log('The popup was closed by the user before completing the sign-in.');
-        // Optionally, you can show a message to the user here
       } else {
         console.error('Google login error:', error);
       }
@@ -40,35 +50,61 @@ function App() {
     try {
       await signOut(auth);
       setUser(null);
+      setNotificationsEnabled(false);
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
 
-  const requestNotificationPermission = async (userId) => {
+  const toggleNotificationPermission = async () => {
+    if (notificationsEnabled) {
+      // Disable notifications
+      await disableNotifications();
+    } else {
+      // Enable notifications
+      await requestNotificationPermission();
+    }
+  };
+
+  const requestNotificationPermission = async () => {
     try {
       const permission = await Notification.requestPermission();
+      console.log('permission after request Notification.requestPermission:', permission);
       if (permission === 'granted') {
         console.log('Notification permission granted.');
-        // Get the FCM token after the permission is granted
-        getFcmToken(userId);
+        if (user) {
+          await getFcmToken(user.uid);
+        }
+        setNotificationsEnabled(true);
       } else {
         console.log('Unable to get permission to notify.');
+        setNotificationsEnabled(false);
       }
     } catch (error) {
       console.error('Error requesting notification permission:', error);
     }
   };
 
+  const disableNotifications = async () => {
+    try {
+      if (user) {
+        await deleteDoc(doc(db, 'users', user.uid));
+        console.log('FCM Token removed from server.');
+      }
+      setNotificationsEnabled(false);
+    } catch (error) {
+      console.error('Error disabling notifications:', error);
+    }
+  };
+
   const getFcmToken = async (userId) => {
     try {
       const currentToken = await getToken(messaging, {
-        vapidKey: process.env.REACT_APP_VAPID_KEY, // Access VAPID key from .env
+        vapidKey: process.env.REACT_APP_VAPID_KEY,
       });
       if (currentToken) {
         console.log('FCM Token:', currentToken);
-        // Save the FCM token to your server or Firestore for later use
-        saveTokenToServer(userId, currentToken);
+        await saveTokenToServer(userId, currentToken);
       } else {
         console.log('No registration token available. Request permission to generate one.');
       }
@@ -88,11 +124,9 @@ function App() {
     }
   };
 
-  // Handle foreground messages (when the app is open and a notification is received)
   useEffect(() => {
     onMessage(messaging, (payload) => {
       console.log('Message received in foreground: ', payload);
-      // Optionally display notification or handle the message here
     });
   }, []);
 
@@ -108,6 +142,12 @@ function App() {
             Logout
           </button>
           <TaskSubmissionForm user={user} />
+          <button
+            onClick={toggleNotificationPermission}
+            className={`px-6 py-2 mt-5 text-lg rounded-lg transition ${notificationsEnabled ? 'bg-gray-500 text-white hover:bg-gray-700' : 'bg-green-500 text-white hover:bg-green-700'}`}
+          >
+            {notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications'}
+          </button>
         </div>
       ) : (
         <div className="text-center">
