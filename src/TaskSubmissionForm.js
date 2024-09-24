@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 
+import ConfirmationModal from './ConfirmationModal'; // Import the ConfirmationModal component
+import TaskHistoryModal from './TaskHistoryModal'; // Import the TaskHistoryModal component
 import { db } from './firebaseConfig'; // Adjust the import according to your project structure
 import { processTaskInputWithLLM } from './openaiApi'; // Import the OpenAI processing function
 
@@ -27,6 +29,9 @@ function TaskSubmissionForm({ user }) {
   const [tasks, setTasks] = useState([]);
   const [editTaskId, setEditTaskId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -111,15 +116,30 @@ function TaskSubmissionForm({ user }) {
     }
   };
 
-  if (!user) {
-    return (
-      <div className="mt-8">
-        <button className="px-6 py-2 text-lg bg-lavenderPurple text-white rounded-lg hover:bg-deepLavender transition">
-          Login
-        </button>
-      </div>
-    );
-  }
+  const handleMarkAsDone = async (task) => {
+    const timestamp = new Date(); // Get the current timestamp
+    try {
+      const taskRef = doc(db, 'tasks', task.id);
+      await updateDoc(taskRef, {
+        completedAt: [...(task.completedAt || []), timestamp], // Store multiple timestamps
+      });
+      setMessage('Task marked as done successfully!');
+      fetchTasks(); // Refresh the task list
+    } catch (error) {
+      console.error('Error marking task as done:', error);
+      setMessage('Error marking task as done.');
+    }
+  };
+
+  const confirmMarkAsDone = (task) => {
+    setSelectedTask(task);
+    setShowModal(true);
+  };
+
+  const showTaskHistory = (task) => {
+    setSelectedTask(task);
+    setShowHistoryModal(true);
+  };
 
   return (
     <div className="mt-8">
@@ -188,9 +208,40 @@ function TaskSubmissionForm({ user }) {
             >
               Delete
             </button>
+            <button
+              onClick={() => confirmMarkAsDone(task)}
+              className="px-4 py-2 mt-2 ml-2 text-sm bg-brightMagenta text-white rounded-lg hover:bg-deepLavender transition"
+            >
+              Mark as Done
+            </button>
+            <button
+              onClick={() => showTaskHistory(task)}
+              className="px-4 py-2 mt-2 ml-2 text-sm bg-royalPurple text-white rounded-lg hover:bg-deepLavender transition"
+            >
+              View History
+            </button>
           </li>
         ))}
       </ul>
+
+      {showModal && (
+        <ConfirmationModal
+          task={selectedTask}
+          onConfirm={() => {
+            handleMarkAsDone(selectedTask);
+            setShowModal(false);
+          }}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
+
+      {showHistoryModal && (
+        <TaskHistoryModal
+          task={selectedTask}
+          history={selectedTask.completedAt || []}
+          onClose={() => setShowHistoryModal(false)}
+        />
+      )}
     </div>
   );
 }
