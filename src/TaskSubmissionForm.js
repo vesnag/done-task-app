@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
 
 import { db } from './firebaseConfig'; // Adjust the import according to your project structure
+import { processTaskInputWithLLM } from './openaiApi'; // Import the OpenAI processing function
 
 const colors = {
   lavenderPurple: '#9151b0',
@@ -25,6 +26,7 @@ function TaskSubmissionForm({ user }) {
   const [message, setMessage] = useState('');
   const [tasks, setTasks] = useState([]);
   const [editTaskId, setEditTaskId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -49,8 +51,11 @@ function TaskSubmissionForm({ user }) {
       return;
     }
 
+    setLoading(true);
+    setMessage('');
+
     try {
-      // Send taskDescription to LLM for processing (for now, we'll simulate this)
+      // Send taskDescription to LLM for processing
       const parsedTask = await processTaskInputWithLLM(taskDescription);
 
       if (editTaskId) {
@@ -83,6 +88,8 @@ function TaskSubmissionForm({ user }) {
     } catch (error) {
       console.error('Error submitting task:', error);
       setMessage('Error submitting task.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -102,19 +109,6 @@ function TaskSubmissionForm({ user }) {
       console.error('Error deleting task:', error);
       setMessage('Error deleting task.');
     }
-  };
-
-  // Simulated LLM function to parse the task input (replace with actual LLM API)
-  const processTaskInputWithLLM = async (input) => {
-    // For now, mock LLM parsing (e.g., parsing "every Monday morning" to an object)
-    return {
-      description: input,
-      schedule: {
-        frequency: 'weekly',
-        day: 'Monday',
-        time: 'morning',
-      },
-    };
   };
 
   if (!user) {
@@ -137,6 +131,7 @@ function TaskSubmissionForm({ user }) {
           value={taskTitle}
           onChange={(e) => setTaskTitle(e.target.value)}
           className="border p-2"
+          disabled={loading}
         />
       </div>
       <div>
@@ -147,6 +142,7 @@ function TaskSubmissionForm({ user }) {
           placeholder="Describe when the task should be done (e.g., every Monday morning)"
           value={taskDescription}
           onChange={(e) => setTaskDescription(e.target.value)}
+          disabled={loading}
         />
       </div>
       <div>
@@ -157,6 +153,7 @@ function TaskSubmissionForm({ user }) {
             value={taskColor}
             onChange={(e) => setTaskColor(e.target.value)}
             className="border p-2"
+            disabled={loading}
           />
           <div
             className="w-6 h-6 ml-2 border rounded-full"
@@ -166,9 +163,10 @@ function TaskSubmissionForm({ user }) {
       </div>
       <button
         onClick={handleTaskSubmission}
-        className="px-6 py-2 mt-4 text-lg bg-lavenderPurple text-white rounded-lg hover:bg-deepLavender transition"
+        className={`px-6 py-2 mt-4 text-lg bg-lavenderPurple text-white rounded-lg hover:bg-deepLavender transition ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={loading}
       >
-        {editTaskId ? 'Update Task' : 'Submit Task'}
+        {editTaskId ? 'Update Task' : loading ? 'Processing...' : 'Submit Task'}
       </button>
       {message && <p className="mt-4 text-rosePink">{message}</p>}
 
