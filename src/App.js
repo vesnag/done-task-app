@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db, googleProvider, messaging } from './firebaseConfig';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
-import { getToken, onMessage } from 'firebase/messaging';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 import TaskSubmissionForm from './TaskSubmissionForm';
+import { getToken } from 'firebase/messaging';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -30,12 +30,27 @@ function App() {
     }
   };
 
+  const requestNotificationPermission = async () => {
+    try {
+      const permission = await Notification.requestPermission();
+      console.log('Notification permission:', permission);
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+      } else {
+        console.log('Notification permission denied.');
+      }
+    } catch (error) {
+      console.error('Error requesting notification permission:', error);
+    }
+  };
+
   const handleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       if (result.user) {
         console.log('User signed in:', result.user);
         checkNotificationPermission();
+        requestNotificationPermission(); // Request permission on login
       }
     } catch (error) {
       if (error.code === 'auth/popup-closed-by-user') {
@@ -63,25 +78,6 @@ function App() {
     } else {
       // Enable notifications
       await requestNotificationPermission();
-    }
-  };
-
-  const requestNotificationPermission = async () => {
-    try {
-      const permission = await Notification.requestPermission();
-      console.log('permission after request Notification.requestPermission:', permission);
-      if (permission === 'granted') {
-        console.log('Notification permission granted.');
-        if (user) {
-          await getFcmToken(user.uid);
-        }
-        setNotificationsEnabled(true);
-      } else {
-        console.log('Unable to get permission to notify.');
-        setNotificationsEnabled(false);
-      }
-    } catch (error) {
-      console.error('Error requesting notification permission:', error);
     }
   };
 
@@ -123,12 +119,6 @@ function App() {
       console.error('Error saving FCM token to server:', error);
     }
   };
-
-  useEffect(() => {
-    onMessage(messaging, (payload) => {
-      console.log('Message received in foreground: ', payload);
-    });
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 p-5 font-sans pt-12">

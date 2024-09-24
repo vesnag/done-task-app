@@ -13,17 +13,20 @@ firebase.initializeApp({
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 });
 
-// Retrieve an instance of Firebase Messaging so that it can handle background messages
+// Initialize Firebase Messaging
 const messaging = firebase.messaging();
 
+// Handle background messages
 messaging.onBackgroundMessage(function (payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
+
   // Customize notification here
-  const notificationTitle = 'Background Message Title';
+  const notificationTitle = payload.notification.title || 'Background Message Title';
   const notificationOptions = {
-    body: 'Background Message body.',
-    icon: '/firebase-logo.png'
+    body: payload.notification.body || 'Background Message body.',
+    icon: '/firebase-logo.png',  // Add a notification icon if needed
   };
 
+  // Show the notification
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
