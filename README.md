@@ -1,28 +1,60 @@
 # DoneTask
 
-**DoneTask** is a simple, intuitive task management app that helps users keep track of their daily, weekly, and monthly tasks. The app aims to offer smart reminders based on users' habits, allowing them to stay organized and productive without the hassle of manual planning.
+**DoneTask** is a task management app designed to help users keep track of their recurring tasks (e.g., daily, weekly, monthly). The app goes beyond simple reminders by learning from the user’s task completion habits and offering **smart notifications** based on actual behavior. DoneTask aims to reduce the cognitive load of planning and to provide personalized assistance to keep users on track.
 
-### **Project Overview**
-- **Current Features:**
-  - Simple login system using Google Authentication (Firebase).
-  - A welcome message and user profile display once logged in.
-  - A "Login with Google" button for users who are not logged in.
-  - Basic UI with minimal styling, including buttons and profile image handling.
+## Project Overview
 
-- **Future Plans:**
-  - **Task Management**: Implement the core task management system, allowing users to add, edit, and delete tasks.
-  - **Smart Reminders**: Develop a habit-learning feature that sends personalized task reminders based on when the user typically completes certain tasks.
-  - **Task History & Analytics**: Track completed tasks and display task history with analytics on user habits.
-  - **Notifications**: Set up push notifications for reminders.
-  - **Improved Design**: Enhance the UI/UX with better design and mobile responsiveness.
+### Current Features:
+- **Google Authentication**: Users can log in with their Google accounts using Firebase Authentication.
+- **Simple UI**: After logging in, users are greeted with a personalized message and their profile picture.
+- **Push Notifications**: Basic setup for push notifications, allowing users to receive notifications when triggered manually.
+- **Service Worker Integration**: Notifications are handled using a service worker to show background notifications even when the app is not in focus.
 
-### **Work in Progress**
-This app is still in its early stages, and new features are being actively developed. Future releases will include the task management functionality, reminders, and more.
+### Task Reminder System (In Progress):
+- **Smart Reminders**: The app sends task reminders based on user behavior and schedules. It learns user habits (e.g., completing a task late Monday morning instead of early morning) and adjusts future reminders accordingly. [Code can be found here.](https://github.com/vesnag/task-prediction-algorithm/)
+- **Notification Scheduling**: Tasks can have flexible schedules (e.g., "every Monday morning," "every two days," "on weekends"). Notifications are sent only when tasks are overdue, using predicted completion times.
 
-### **Technologies Used:**
+### Future Features:
+- **Task Management**: Full task management system allowing users to add, edit, delete tasks, and specify task recurrence (daily, weekly, monthly).
+- **Machine Learning-Based Predictions**: The app will predict the ideal time for completing tasks based on past behavior, dynamically adjusting task deadlines and reminders.
+- **Advanced Notifications**: Notifications will be sent if a task is not completed by the predicted time, factoring in a grace period (threshold).
+- **Task History & Analytics**: Display past task completion data with analytics to provide insights into user habits and trends.
+- **UI Enhancements**: Improve the user experience with an updated, mobile-responsive design, task categories, and visual analytics (e.g., charts for task trends).
+
+### Privacy & Security:
+- **Consent**: Inform users about data collection and ensure compliance with privacy regulations (GDPR, CCPA).
+- **Data Encryption**: Implement secure storage of user data.
+
+## Work in Progress
+
+DoneTask is still under active development, with several key features being built, such as:
+
+- **Task Prediction Using AI**: Implementation of machine learning models to analyse user behavior and predict the optimal time for task completion.
+- **Automated Notification System**: A system that automatically triggers reminders if the task isn’t completed by the predicted deadline.
+- **Task Recurrence Logic**: Logic to handle recurring tasks based on user-set schedules like "every Monday" or "every two days," combined with actual user behavior patterns.
+
+## Technologies Used
+
 - **Frontend**: React.js
-- **Backend/Hosting**: Firebase (Firebase Authentication, Firestore, and Hosting)
-- **Deployment**: Firebase Hosting
 
-### Visit the website
-You can visit the website at https://donetask-f64fe.web.app/
+- **Backend & Hosting**: Firebase
+  - **Firebase Authentication**: Handles user login via Google.
+  - **Firestore**: Database for storing user tasks and notification settings.
+  - **Firebase Cloud Messaging (FCM)**: For sending push notifications to users.
+  - **Firebase Hosting**: Hosts the app and service worker for notifications.
+
+- **Machine Learning**:
+  - **Potential Libraries**: `tensorflow.js` or `ml5.js` for client-side AI, or a backend ML model using Google Cloud AI or AWS for predictive notifications.
+
+- **Notifications**: Push notifications using FCM, with a service worker (`firebase-messaging-sw.js`) to handle background notifications.
+
+## AI Integration for Task Predictions (Planned)
+
+The app will use AI/ML to:
+- Analyse historical task completion patterns to predict future task completion times.
+- Adjust notifications dynamically based on user behavior (e.g., adjusting a task from "Monday morning" to "Monday at 9:30 AM" based on previous completions).
+- A machine learning model will run either client-side (`tensorflow.js`) or server-side (Google Cloud AI, AWS SageMaker) to optimize notification timings.
+
+## Visit the Website
+
+You can access the live version of the app here: [DoneTask Website](https://donetask-f64fe.web.app/)
