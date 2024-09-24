@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { auth, googleProvider } from './firebaseConfig';
+import { auth, db, googleProvider, messaging } from './firebaseConfig';
+import { doc, setDoc } from 'firebase/firestore';
+import { getToken, onMessage } from 'firebase/messaging';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 import TaskSubmissionForm from './TaskSubmissionForm';
@@ -20,9 +22,17 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      if (result.user) {
+        //requestNotificationPermission(result.user.uid);
+      }
     } catch (error) {
-      console.error("Google login error:", error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        console.log('The popup was closed by the user before completing the sign-in.');
+        // Optionally, you can show a message to the user here
+      } else {
+        console.error('Google login error:', error);
+      }
     }
   };
 
@@ -34,6 +44,57 @@ function App() {
       console.error("Logout error:", error);
     }
   };
+
+  const requestNotificationPermission = async (userId) => {
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+        // Get the FCM token after the permission is granted
+        getFcmToken(userId);
+      } else {
+        console.log('Unable to get permission to notify.');
+      }
+    } catch (error) {
+      console.error('Error requesting notification permission:', error);
+    }
+  };
+
+  const getFcmToken = async (userId) => {
+    try {
+      const currentToken = await getToken(messaging, {
+        vapidKey: process.env.REACT_APP_VAPID_KEY, // Access VAPID key from .env
+      });
+      if (currentToken) {
+        console.log('FCM Token:', currentToken);
+        // Save the FCM token to your server or Firestore for later use
+        saveTokenToServer(userId, currentToken);
+      } else {
+        console.log('No registration token available. Request permission to generate one.');
+      }
+    } catch (error) {
+      console.error('An error occurred while retrieving FCM token:', error);
+    }
+  };
+
+  const saveTokenToServer = async (userId, token) => {
+    try {
+      await setDoc(doc(db, 'users', userId), {
+        fcmToken: token,
+      });
+      console.log('FCM Token saved to server.');
+    } catch (error) {
+      console.error('Error saving FCM token to server:', error);
+    }
+  };
+
+  // Handle foreground messages (when the app is open and a notification is received)
+  useEffect(() => {
+    onMessage(messaging, (payload) => {
+      console.log('Message received in foreground: ', payload);
+      // Optionally display notification or handle the message here
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 p-5 font-sans pt-12">

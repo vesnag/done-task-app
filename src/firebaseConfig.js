@@ -1,21 +1,17 @@
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 
 import { getFirestore } from 'firebase/firestore';
-import { initializeApp } from "firebase/app";
+import { getMessaging } from 'firebase/messaging';
+import { initializeApp } from 'firebase/app';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyA5Qj3cAEGje2YXC0yWWAOLvyIbOWa_CHw",
-  authDomain: "donetask-f64fe.firebaseapp.com",
-  projectId: "donetask-f64fe",
-  storageBucket: "donetask-f64fe.appspot.com",
-  messagingSenderId: "324330895675",
-  appId: "1:324330895675:web:c978d7d795ead056205f1e",
-  measurementId: "G-GT166Y7WD3"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
@@ -23,3 +19,5 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+export const messaging = getMessaging(app);
+

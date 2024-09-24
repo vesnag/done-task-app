@@ -14,7 +14,7 @@ export function register(config) {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      const swUrl = `${process.env.PUBLIC_URL}/firebase-messaging-sw.js`;
 
       if (isLocalhost) {
         checkValidServiceWorker(swUrl, config);
