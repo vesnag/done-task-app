@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { auth, googleProvider } from './firebaseConfig';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
+import TaskSubmissionForm from './TaskSubmissionForm';
+
 function App() {
   const [user, setUser] = useState(null);
 
@@ -38,18 +40,13 @@ function App() {
       {user ? (
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800">Welcome, {user.displayName}!</h1>
-          <img
-            src={user.photoURL}
-            alt={user.displayName}
-            className="w-24 h-24 mt-5 rounded-full shadow-lg"
-          />
-          <p className="mt-4 text-gray-600">Email: {user.email}</p>
           <button
             onClick={handleLogout}
             className="px-6 py-2 mt-5 text-lg bg-red-500 text-white rounded-lg hover:bg-red-700 transition"
           >
             Logout
           </button>
+          <TaskSubmissionForm user={user} />
         </div>
       ) : (
         <div className="text-center">
