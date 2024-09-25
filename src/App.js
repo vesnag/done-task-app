@@ -1,14 +1,24 @@
+// App.js
 import React, { useEffect, useState } from 'react';
 import { auth, db, googleProvider, messaging } from './firebaseConfig';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
+import { FiLogOut } from 'react-icons/fi'; // Importing an icon library
+import Footer from './Footer'; // Import Footer component if needed
 import TaskSubmissionForm from './TaskSubmissionForm';
+import YourTasks from './YourTasks';
 import { getToken } from 'firebase/messaging';
 
 function App() {
   const [user, setUser] = useState(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+
+  // Set dark mode by default
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -73,10 +83,8 @@ function App() {
 
   const toggleNotificationPermission = async () => {
     if (notificationsEnabled) {
-      // Disable notifications
       await disableNotifications();
     } else {
-      // Enable notifications
       await requestNotificationPermission();
     }
   };
@@ -120,37 +128,73 @@ function App() {
     }
   };
 
+  const toggleFormVisibility = () => {
+    setShowForm(!showForm);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 p-5 font-sans pt-12">
-      {user ? (
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800">Welcome, {user.displayName}!</h1>
-          <button
-            onClick={handleLogout}
-            className="px-6 py-2 mt-5 text-lg bg-red-500 text-white rounded-lg hover:bg-red-700 transition"
-          >
-            Logout
-          </button>
-          <TaskSubmissionForm user={user} />
-          <button
-            onClick={toggleNotificationPermission}
-            className={`px-6 py-2 mt-5 text-lg rounded-lg transition ${notificationsEnabled ? 'bg-gray-500 text-white hover:bg-gray-700' : 'bg-green-500 text-white hover:bg-green-700'}`}
-          >
-            {notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications'}
-          </button>
-        </div>
-      ) : (
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800">Welcome to DoneTask!</h1>
-          <p className="mt-4 text-gray-600">Please log in to continue.</p>
-          <button
-            onClick={handleLogin}
-            className="px-6 py-2 mt-5 text-lg bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition"
-          >
-            Login with Google
-          </button>
-        </div>
-      )}
+    <div className="min-h-screen bg-darkBg text-white font-sans flex flex-col">
+      <div className="flex-grow container mx-auto p-4 sm:p-6">
+        {user ? (
+          <>
+            <header className="flex justify-between items-center mb-6">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-lavenderPurple">
+                Welcome, {user.displayName}!
+              </h1>
+              <button
+                onClick={handleLogout}
+                className="p-2 bg-deepRed text-white rounded-md hover:bg-darkRed transition flex items-center justify-center"
+                aria-label="Logout"
+              >
+                <FiLogOut size={20} />
+              </button>
+            </header>
+
+            <YourTasks user={user} />
+
+            <div className="mt-6 flex flex-col space-y-8">
+              <button
+                onClick={toggleFormVisibility}
+                className="w-full px-4 py-3 bg-brightMagenta text-white text-lg font-semibold rounded-md hover:bg-deepLavender transition"
+                aria-label={showForm ? 'Close form' : 'Add new task'}
+              >
+                {showForm ? 'Close Form' : 'Add New Task'}
+              </button>
+
+              {showForm && <TaskSubmissionForm user={user} />}
+
+              <button
+                onClick={toggleNotificationPermission}
+                className={`w-full md:w-auto px-2 py-1 text-sm font-semibold rounded-md transition ${notificationsEnabled
+                  ? 'bg-gray-500 text-white hover:bg-gray-700'
+                  : 'bg-deepLavender text-white hover:bg-royalPurple'
+                  } mt-4 md:mt-6`}
+                aria-label={
+                  notificationsEnabled ? 'Disable notifications' : 'Enable notifications'
+                }
+              >
+                {notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications'}
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-lavenderPurple mb-4">
+              Welcome to DoneTask!
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-300 mb-8">Please log in to continue.</p>
+            <button
+              onClick={handleLogin}
+              className="px-6 py-3 bg-deepLavender text-white text-lg font-semibold rounded-md hover:bg-royalPurple transition"
+              aria-label="Login with Google"
+            >
+              Login with Google
+            </button>
+          </div>
+        )}
+      </div>
+      {/* Uncomment the Footer component if you decide to include it */}
+      {/* <Footer /> */}
     </div>
   );
 }

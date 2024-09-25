@@ -1,54 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { collection, deleteDoc, doc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
+// TaskSubmissionForm.js
+import React, { useState } from 'react';
+import { collection, doc, setDoc } from 'firebase/firestore';
 
-import ConfirmationModal from './ConfirmationModal'; // Import the ConfirmationModal component
-import TaskHistoryModal from './TaskHistoryModal'; // Import the TaskHistoryModal component
-import { db } from './firebaseConfig'; // Adjust the import according to your project structure
-import { processTaskInputWithLLM } from './openaiApi'; // Import the OpenAI processing function
-
-const colors = {
-  lavenderPurple: '#9151b0',
-  lightPink: '#cb90d2',
-  deepLavender: '#7260c3',
-  royalPurple: '#6930a1',
-  brightMagenta: '#8f49bb',
-  softPink: '#efa1cb',
-  white: '#FFFFFF',
-  darkPurple: '#863591',
-  violet: '#623eaa',
-  rosePink: '#f774aa',
-  deepRed: '#8f2968',
-  darkRed: '#98254c',
-};
+import { db } from './firebaseConfig';
+import { processTaskInputWithLLM } from './openaiApi';
 
 function TaskSubmissionForm({ user }) {
   const [taskTitle, setTaskTitle] = useState('');
-  const [taskColor, setTaskColor] = useState('#000000'); // Default color
+  const [taskColor, setTaskColor] = useState('#9151b0'); // Default to lavenderPurple
   const [taskDescription, setTaskDescription] = useState('');
   const [message, setMessage] = useState('');
-  const [tasks, setTasks] = useState([]);
   const [editTaskId, setEditTaskId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [showHistoryModal, setShowHistoryModal] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      fetchTasks();
-    }
-  }, [user]);
-
-  const fetchTasks = async () => {
-    try {
-      const q = query(collection(db, 'tasks'), where('userId', '==', user.uid));
-      const querySnapshot = await getDocs(q);
-      const tasksList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setTasks(tasksList);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  };
 
   const handleTaskSubmission = async () => {
     if (!taskTitle || !taskDescription) {
@@ -63,185 +26,120 @@ function TaskSubmissionForm({ user }) {
       // Send taskDescription to LLM for processing
       const parsedTask = await processTaskInputWithLLM(taskDescription);
 
+      const taskData = {
+        title: taskTitle,
+        description: taskDescription,
+        task: parsedTask,
+        color: taskColor,
+        userId: user.uid,
+      };
+
       if (editTaskId) {
         // Update existing task
-        await setDoc(doc(db, 'tasks', editTaskId), {
-          title: taskTitle,
-          description: taskDescription,
-          task: parsedTask,
-          color: taskColor,
-          userId: user.uid,
-        });
+        await setDoc(doc(db, 'tasks', editTaskId), taskData);
         setMessage('Task updated successfully!');
       } else {
         // Create new task
-        await setDoc(doc(collection(db, 'tasks')), {
-          title: taskTitle,
-          description: taskDescription,
-          task: parsedTask,
-          color: taskColor,
-          userId: user.uid,
-        });
+        await setDoc(doc(collection(db, 'tasks')), taskData);
         setMessage('Task submitted successfully!');
       }
 
+      // Reset form fields
       setTaskTitle('');
       setTaskDescription('');
-      setTaskColor('#000000');
+      setTaskColor('#9151b0'); // Reset to default color
       setEditTaskId(null);
-      fetchTasks(); // Refresh the task list
     } catch (error) {
       console.error('Error submitting task:', error);
-      setMessage('Error submitting task.');
+      setMessage(error.message || 'Error submitting task.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEditTask = (task) => {
-    setTaskTitle(task.title);
-    setTaskDescription(task.description);
-    setTaskColor(task.color);
-    setEditTaskId(task.id);
-  };
-
-  const handleDeleteTask = async (taskId) => {
-    try {
-      await deleteDoc(doc(db, 'tasks', taskId));
-      setMessage('Task deleted successfully!');
-      fetchTasks(); // Refresh the task list
-    } catch (error) {
-      console.error('Error deleting task:', error);
-      setMessage('Error deleting task.');
-    }
-  };
-
-  const handleMarkAsDone = async (task) => {
-    const timestamp = new Date(); // Get the current timestamp
-    try {
-      const taskRef = doc(db, 'tasks', task.id);
-      await updateDoc(taskRef, {
-        completedAt: [...(task.completedAt || []), timestamp], // Store multiple timestamps
-      });
-      setMessage('Task marked as done successfully!');
-      fetchTasks(); // Refresh the task list
-    } catch (error) {
-      console.error('Error marking task as done:', error);
-      setMessage('Error marking task as done.');
-    }
-  };
-
-  const confirmMarkAsDone = (task) => {
-    setSelectedTask(task);
-    setShowModal(true);
-  };
-
-  const showTaskHistory = (task) => {
-    setSelectedTask(task);
-    setShowHistoryModal(true);
-  };
-
   return (
-    <div className="mt-8">
-      <h2 className="text-xl font-bold text-lavenderPurple">{editTaskId ? 'Edit Task' : 'Submit a New Task'}</h2>
-      <div>
-        <label>Task Title:</label>
-        <input
-          type="text"
-          value={taskTitle}
-          onChange={(e) => setTaskTitle(e.target.value)}
-          className="border p-2"
-          disabled={loading}
-        />
-      </div>
-      <div>
-        <label>Task Description:</label>
-        <textarea
-          className="w-full p-4 mt-4 border rounded-lg bg-white text-deepLavender"
-          rows="4"
-          placeholder="Describe when the task should be done (e.g., every Monday morning)"
-          value={taskDescription}
-          onChange={(e) => setTaskDescription(e.target.value)}
-          disabled={loading}
-        />
-      </div>
-      <div>
-        <label>Task Color:</label>
-        <div className="flex items-center">
+    <div className="mt-6 p-6 bg-gray-800 rounded-lg shadow-md">
+      <h2 className="text-2xl sm:text-3xl font-bold text-lavenderPurple mb-6">
+        {editTaskId ? 'Edit Task' : 'Submit a New Task'}
+      </h2>
+      <div className="space-y-6">
+        <div>
+          <label htmlFor="taskTitle" className="block text-lg font-medium text-gray-300">
+            Task Title
+          </label>
           <input
-            type="color"
-            value={taskColor}
-            onChange={(e) => setTaskColor(e.target.value)}
-            className="border p-2"
+            type="text"
+            id="taskTitle"
+            value={taskTitle}
+            onChange={(e) => setTaskTitle(e.target.value)}
+            className="mt-1 block w-full px-4 py-2 border border-gray-700 rounded-md bg-gray-700 text-white focus:ring-lavenderPurple focus:border-lavenderPurple"
             disabled={loading}
+            aria-required="true"
+            placeholder="Enter task title"
           />
-          <div
-            className="w-6 h-6 ml-2 border rounded-full"
-            style={{ backgroundColor: taskColor }}
-          ></div>
         </div>
+        <div>
+          <label htmlFor="taskDescription" className="block text-lg font-medium text-gray-300">
+            Task Description
+          </label>
+          <textarea
+            id="taskDescription"
+            className="mt-1 block w-full px-4 py-2 border border-gray-700 rounded-md bg-gray-700 text-white focus:ring-lavenderPurple focus:border-lavenderPurple"
+            rows="4"
+            placeholder="Describe when the task should be done (e.g., every Monday morning)"
+            value={taskDescription}
+            onChange={(e) => setTaskDescription(e.target.value)}
+            disabled={loading}
+            aria-required="true"
+          />
+        </div>
+        <div>
+          <label className="block text-lg font-medium text-gray-300">
+            Task Color
+          </label>
+          <div className="flex items-center mt-2 space-x-4">
+            <div className="flex space-x-2">
+              {[
+                '#9151b0', // lavenderPurple
+                '#cb90d2', // lightPink
+                '#7260c3', // deepLavender
+                '#6930a1', // royalPurple
+                '#8f49bb', // brightMagenta
+                '#efa1cb', // softPink
+                '#623eaa', // violet
+                '#f774aa', // rosePink
+              ].map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  className={`w-8 h-8 rounded-full border-2 focus:outline-none ${taskColor === color ? 'border-white' : 'border-gray-700'
+                    }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setTaskColor(color)}
+                  disabled={loading}
+                  aria-label={`Select color ${color}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+        <div>
+          <button
+            onClick={handleTaskSubmission}
+            className={`w-full px-6 py-3 text-lg font-semibold text-white rounded-md transition ${loading
+                ? 'bg-gray-600 cursor-not-allowed'
+                : 'bg-lavenderPurple hover:bg-deepLavender'
+              }`}
+            disabled={loading}
+            aria-label={editTaskId ? 'Update Task' : 'Submit Task'}
+          >
+            {loading ? 'Processing...' : editTaskId ? 'Update Task' : 'Submit Task'}
+          </button>
+        </div>
+        {message && (
+          <p className="mt-4 text-center text-rosePink font-medium">{message}</p>
+        )}
       </div>
-      <button
-        onClick={handleTaskSubmission}
-        className={`px-6 py-2 mt-4 text-lg bg-lavenderPurple text-white rounded-lg hover:bg-deepLavender transition ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={loading}
-      >
-        {editTaskId ? 'Update Task' : loading ? 'Processing...' : 'Submit Task'}
-      </button>
-      {message && <p className="mt-4 text-rosePink">{message}</p>}
-
-      <h2 className="text-xl font-bold text-lavenderPurple mt-8">Your Tasks</h2>
-      <ul>
-        {tasks.map(task => (
-          <li key={task.id} style={{ backgroundColor: task.color }} className="p-2 mt-2 border rounded-lg">
-            <h3 className="font-bold">{task.title}</h3>
-            <p>{task.description}</p>
-            <button
-              onClick={() => handleEditTask(task)}
-              className="px-4 py-2 mt-2 text-sm bg-lightPink text-white rounded-lg hover:bg-deepLavender transition"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => handleDeleteTask(task.id)}
-              className="px-4 py-2 mt-2 ml-2 text-sm bg-deepRed text-white rounded-lg hover:bg-darkRed transition"
-            >
-              Delete
-            </button>
-            <button
-              onClick={() => confirmMarkAsDone(task)}
-              className="px-4 py-2 mt-2 ml-2 text-sm bg-brightMagenta text-white rounded-lg hover:bg-deepLavender transition"
-            >
-              Mark as Done
-            </button>
-            <button
-              onClick={() => showTaskHistory(task)}
-              className="px-4 py-2 mt-2 ml-2 text-sm bg-royalPurple text-white rounded-lg hover:bg-deepLavender transition"
-            >
-              View History
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      {showModal && (
-        <ConfirmationModal
-          task={selectedTask}
-          onConfirm={() => {
-            handleMarkAsDone(selectedTask);
-            setShowModal(false);
-          }}
-          onCancel={() => setShowModal(false)}
-        />
-      )}
-
-      {showHistoryModal && (
-        <TaskHistoryModal
-          task={selectedTask}
-          history={selectedTask.completedAt || []}
-          onClose={() => setShowHistoryModal(false)}
-        />
-      )}
     </div>
   );
 }
