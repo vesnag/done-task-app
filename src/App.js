@@ -1,3 +1,5 @@
+import './App.css';
+
 // App.js
 import React, { useEffect, useState } from 'react';
 import { auth, db, googleProvider, messaging } from './firebaseConfig';
@@ -5,7 +7,6 @@ import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 import { FiLogOut } from 'react-icons/fi'; // Importing an icon library
-import Footer from './Footer'; // Import Footer component if needed
 import TaskSubmissionForm from './TaskSubmissionForm';
 import YourTasks from './YourTasks';
 import { getToken } from 'firebase/messaging';

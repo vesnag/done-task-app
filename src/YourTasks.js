@@ -1,10 +1,9 @@
-// Importing icons from react-icons/fi (Feather Icons)
 import { FiClock, FiEdit, FiTrash } from 'react-icons/fi';
-// YourTasks.js
 import React, { useEffect, useState } from 'react';
 import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 
 import ConfirmationModal from './ConfirmationModal';
+import EditTaskModal from './EditTaskModal';
 import TaskHistoryModal from './TaskHistoryModal';
 import { db } from './firebaseConfig';
 
@@ -13,6 +12,7 @@ function YourTasks({ user }) {
   const [selectedTask, setSelectedTask] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -34,7 +34,7 @@ function YourTasks({ user }) {
 
   const handleEditTask = (task) => {
     setSelectedTask(task);
-    // You might want to pass this task to a form for editing
+    setShowEditModal(true);
   };
 
   const handleDeleteTask = async (taskId) => {
@@ -73,14 +73,11 @@ function YourTasks({ user }) {
     setShowHistoryModal(true);
   };
 
-  // Function to determine if the task color is light or dark for text contrast
   const isColorLight = (hexColor) => {
-    // Remove '#' if present
     const color = hexColor.replace('#', '');
     const r = parseInt(color.substr(0, 2), 16);
     const g = parseInt(color.substr(2, 2), 16);
     const b = parseInt(color.substr(4, 2), 16);
-    // Calculate luminance
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
     return luminance > 0.5;
   };
@@ -121,7 +118,6 @@ function YourTasks({ user }) {
                   >
                     Done
                   </button>
-                  {/* History Icon Button */}
                   <button
                     onClick={() => showTaskHistory(task)}
                     className="text-lg p-2 rounded-md transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-lavenderPurple"
@@ -131,7 +127,6 @@ function YourTasks({ user }) {
                   >
                     <FiClock size={20} />
                   </button>
-                  {/* Edit Icon Button */}
                   <button
                     onClick={() => handleEditTask(task)}
                     className="text-lg p-2 rounded-md transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-lavenderPurple"
@@ -141,7 +136,6 @@ function YourTasks({ user }) {
                   >
                     <FiEdit size={20} />
                   </button>
-                  {/* Delete Icon Button */}
                   <button
                     onClick={() => handleDeleteTask(task.id)}
                     className="text-lg p-2 rounded-md transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-lavenderPurple"
@@ -174,6 +168,17 @@ function YourTasks({ user }) {
           task={selectedTask}
           history={selectedTask.completedAt || []}
           onClose={() => setShowHistoryModal(false)}
+        />
+      )}
+
+      {showEditModal && selectedTask && (
+        <EditTaskModal
+          task={selectedTask}
+          onClose={() => setShowEditModal(false)}
+          onSave={() => {
+            fetchTasks();
+            setShowEditModal(false);
+          }}
         />
       )}
 

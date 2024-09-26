@@ -1,7 +1,7 @@
-// TaskSubmissionForm.js
 import React, { useState } from 'react';
 import { collection, doc, setDoc } from 'firebase/firestore';
 
+import ColorPicker from './ColorPicker';
 import { db } from './firebaseConfig';
 import { processTaskInputWithLLM } from './openaiApi';
 
@@ -23,7 +23,6 @@ function TaskSubmissionForm({ user }) {
     setMessage('');
 
     try {
-      // Send taskDescription to LLM for processing
       const parsedTask = await processTaskInputWithLLM(taskDescription);
 
       const taskData = {
@@ -35,19 +34,16 @@ function TaskSubmissionForm({ user }) {
       };
 
       if (editTaskId) {
-        // Update existing task
         await setDoc(doc(db, 'tasks', editTaskId), taskData);
         setMessage('Task updated successfully!');
       } else {
-        // Create new task
         await setDoc(doc(collection(db, 'tasks')), taskData);
         setMessage('Task submitted successfully!');
       }
 
-      // Reset form fields
       setTaskTitle('');
       setTaskDescription('');
-      setTaskColor('#9151b0'); // Reset to default color
+      setTaskColor('#9151b0');
       setEditTaskId(null);
     } catch (error) {
       console.error('Error submitting task:', error);
@@ -97,38 +93,14 @@ function TaskSubmissionForm({ user }) {
           <label className="block text-lg font-medium text-gray-300">
             Task Color
           </label>
-          <div className="flex items-center mt-2 space-x-4">
-            <div className="flex space-x-2">
-              {[
-                '#9151b0', // lavenderPurple
-                '#cb90d2', // lightPink
-                '#7260c3', // deepLavender
-                '#6930a1', // royalPurple
-                '#8f49bb', // brightMagenta
-                '#efa1cb', // softPink
-                '#623eaa', // violet
-                '#f774aa', // rosePink
-              ].map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  className={`w-8 h-8 rounded-full border-2 focus:outline-none ${taskColor === color ? 'border-white' : 'border-gray-700'
-                    }`}
-                  style={{ backgroundColor: color }}
-                  onClick={() => setTaskColor(color)}
-                  disabled={loading}
-                  aria-label={`Select color ${color}`}
-                />
-              ))}
-            </div>
-          </div>
+          <ColorPicker selectedColor={taskColor} onColorSelect={setTaskColor} />
         </div>
         <div>
           <button
             onClick={handleTaskSubmission}
             className={`w-full px-6 py-3 text-lg font-semibold text-white rounded-md transition ${loading
-                ? 'bg-gray-600 cursor-not-allowed'
-                : 'bg-lavenderPurple hover:bg-deepLavender'
+              ? 'bg-gray-600 cursor-not-allowed'
+              : 'bg-lavenderPurple hover:bg-deepLavender'
               }`}
             disabled={loading}
             aria-label={editTaskId ? 'Update Task' : 'Submit Task'}

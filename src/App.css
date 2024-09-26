@@ -1,38 +1,53 @@
-.App {
-  text-align: center;
-}
+@keyframes firework-explode {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  100% {
+    opacity: 0;
+    transform: scale(2);
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+@keyframes firework-check {
+  0% {
+    opacity: 0;
+    stroke-dasharray: 0, 100;
+  }
+
+  100% {
+    opacity: 1;
+    stroke-dasharray: 100, 0;
+  }
 }
 
-.App-link {
-  color: #61dafb;
+.fireworks-animation .firework-path {
+  animation: firework-explode 2s ease-out forwards;
 }
 
-@keyframes App-logo-spin {
-  from {
+.fireworks-animation .firework-check {
+  animation: firework-check 2s ease-out forwards;
+}
+
+/* Loading spinner styles */
+.loader {
+  border: 8px solid #f3f3f3;
+  /* Light grey */
+  border-top: 8px solid #f774aa;
+  /* Pink */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+
+  100% {
     transform: rotate(360deg);
   }
 }
