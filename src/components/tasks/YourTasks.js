@@ -1,5 +1,9 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
-import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import React, {
+  forwardRef, useCallback, useEffect, useImperativeHandle, useState,
+} from 'react';
+import {
+  collection, deleteDoc, doc, getDocs, query, updateDoc, where,
+} from 'firebase/firestore';
 
 import ModalHandler from '../modals/ModalHandler';
 import TaskListItem from './TaskListItem';
@@ -17,7 +21,7 @@ const YourTasks = forwardRef(({ user }, ref) => {
     try {
       const q = query(collection(db, 'tasks'), where('userId', '==', user.uid));
       const querySnapshot = await getDocs(q);
-      const tasksList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const tasksList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setTasks(tasksList);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -33,7 +37,7 @@ const YourTasks = forwardRef(({ user }, ref) => {
   useImperativeHandle(ref, () => ({
     addTask(newTask) {
       setTasks((prevTasks) => [...prevTasks, newTask]);
-    }
+    },
   }));
 
   const handleEditTask = (task) => {

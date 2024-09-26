@@ -10,21 +10,21 @@ firebase.initializeApp({
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 });
 
 // Initialize Firebase Messaging
 const messaging = firebase.messaging();
 
 // Handle background messages
-messaging.onBackgroundMessage(function (payload) {
+messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
   // Customize notification here
   const notificationTitle = payload.notification.title || 'Background Message Title';
   const notificationOptions = {
     body: payload.notification.body || 'Background Message body.',
-    icon: '/firebase-logo.png',  // Add a notification icon if needed
+    icon: '/firebase-logo.png', // Add a notification icon if needed
   };
 
   // Show the notification

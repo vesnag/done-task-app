@@ -1,6 +1,8 @@
-import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { auth, googleProvider } from '../services/firebaseConfig';
+import {
+  GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut,
+} from 'firebase/auth';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { auth, googleProvider } from '../services/firebaseConfig';
 
 import App from '../components/App';
 

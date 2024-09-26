@@ -1,9 +1,9 @@
+import React from 'react';
 import ConfirmationModal from './ConfirmationModal';
 import EditTaskModal from './EditTaskModal';
-import React from 'react';
 import TaskHistoryModal from './TaskHistoryModal';
 
-const ModalHandler = ({
+function ModalHandler({
   selectedTask,
   showModal,
   showHistoryModal,
@@ -11,32 +11,34 @@ const ModalHandler = ({
   onConfirmMarkAsDone,
   onCloseModal,
   onSaveEdit,
-}) => (
-  <>
-    {showModal && selectedTask && (
+}) {
+  return (
+    <>
+      {showModal && selectedTask && (
       <ConfirmationModal
         task={selectedTask}
         onConfirm={onConfirmMarkAsDone}
         onCancel={onCloseModal}
       />
-    )}
+      )}
 
-    {showHistoryModal && selectedTask && (
+      {showHistoryModal && selectedTask && (
       <TaskHistoryModal
         task={selectedTask}
         history={selectedTask.completedAt || []}
         onClose={onCloseModal}
       />
-    )}
+      )}
 
-    {showEditModal && selectedTask && (
+      {showEditModal && selectedTask && (
       <EditTaskModal
         task={selectedTask}
         onClose={onCloseModal}
         onSave={onSaveEdit}
       />
-    )}
-  </>
-);
+      )}
+    </>
+  );
+}
 
 export default ModalHandler;

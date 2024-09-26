@@ -1,15 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { auth, db, googleProvider, messaging } from '../services/firebaseConfig';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { getToken } from 'firebase/messaging';
+import {
+  auth, db, googleProvider, messaging,
+} from '../services/firebaseConfig';
 
 import Header from './common/Header';
 import LoginPrompt from './common/LoginPrompt';
 import NotificationButton from './common/NotificationButton';
-import { BrowserRouter as Router } from 'react-router-dom';
 import TaskSubmissionForm from './tasks/TaskSubmissionForm';
 import YourTasks from './tasks/YourTasks';
-import { getToken } from 'firebase/messaging';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -52,6 +54,7 @@ function App() {
       if (result.user) {
         checkNotificationPermission();
         requestNotificationPermission();
+        await getFcmToken(result.user.uid); // Get and save FCM token
       }
     } catch (error) {
       if (error.code === 'auth/popup-closed-by-user') {
@@ -68,7 +71,7 @@ function App() {
       setUser(null);
       setNotificationsEnabled(false);
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error('Logout error:', error);
     }
   };
 
@@ -133,7 +136,9 @@ function App() {
           {user ? (
             <>
               <Header user={user} onLogout={handleLogout} />
-              <YourTasks ref={yourTasksRef} user={user} /> {/* Pass the ref */}
+              <YourTasks ref={yourTasksRef} user={user} />
+              {' '}
+              {/* Pass the ref */}
               <div className="mt-6 flex flex-col space-y-8">
                 <button
                   onClick={toggleFormVisibility}

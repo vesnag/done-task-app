@@ -1,4 +1,4 @@
-const {onSchedule} = require("firebase-functions/v2/scheduler");
+const { onSchedule } = require("firebase-functions/v2/scheduler");
 const admin = require("firebase-admin");
 
 admin.initializeApp();
@@ -14,7 +14,9 @@ exports.checkAndSendReminders = onSchedule({
 
   tasksSnapshot.forEach(async (doc) => {
     const task = doc.data();
-    const {mostFrequentDay, mostFrequentHour, completedAt, userFcmToken} = task;
+    const {
+      mostFrequentDay, mostFrequentHour, completedAt, userFcmToken,
+    } = task;
 
     // Check if today is the predicted day
     if (shouldSendReminderToday(now, mostFrequentDay)) {
@@ -34,9 +36,7 @@ exports.checkAndSendReminders = onSchedule({
 });
 
 // Helper function to check if today is the predicted day (e.g., Monday)
-const shouldSendReminderToday = (now, mostFrequentDay) => {
-  return now.getDay() === mostFrequentDay;
-};
+const shouldSendReminderToday = (now, mostFrequentDay) => now.getDay() === mostFrequentDay;
 
 // Helper function to find the most recent task completion
 const getLastCompletion = (completedAt) => {
@@ -60,12 +60,12 @@ const sendReminder = async (token, taskDescription) => {
   const message = {
     notification: {
       title: "Reminder: Time for your task!",
-      body: "It looks like you haven’t completed \"" +
-        taskDescription +
-        "\" yet. " +
-            "Don’t forget to mark it done!",
+      body: `It looks like you haven’t completed "${
+        taskDescription
+      }" yet. ` +
+            `Don’t forget to mark it done!`,
     },
-    token: token,
+    token,
   };
 
   try {

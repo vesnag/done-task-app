@@ -4,7 +4,7 @@ import { FiX } from 'react-icons/fi';
 import HistoryList from '../common/HistoryList';
 import PaginationControls from '../common/PaginationControls';
 
-const TaskHistoryModal = ({ task, history = [], onClose }) => {
+function TaskHistoryModal({ task, history = [], onClose }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -46,7 +46,15 @@ const TaskHistoryModal = ({ task, history = [], onClose }) => {
           <FiX size={24} />
         </button>
         <h3 className="text-2xl font-bold text-lavenderPurple mb-4">Task History</h3>
-        <p className="text-lg mb-4">History of completions for <span className="font-semibold text-deepLavender">"{task.title}"</span>:</p>
+        <p className="text-lg mb-4">
+          History of completions for
+          <span className="font-semibold text-deepLavender">
+            "
+            {task.title}
+            "
+          </span>
+          :
+        </p>
         <HistoryList history={paginatedHistory} />
         {totalPages > 1 && (
           <PaginationControls
@@ -67,6 +75,6 @@ const TaskHistoryModal = ({ task, history = [], onClose }) => {
       </div>
     </div>
   );
-};
+}
 
 export default TaskHistoryModal;

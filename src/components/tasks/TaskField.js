@@ -1,6 +1,8 @@
 import React from 'react';
 
-const TaskField = ({ type = 'text', value, onChange, placeholder }) => {
+function TaskField({
+  type = 'text', value, onChange, placeholder,
+}) {
   const commonProps = {
     value,
     onChange,
@@ -13,6 +15,6 @@ const TaskField = ({ type = 'text', value, onChange, placeholder }) => {
   ) : (
     <input type={type} {...commonProps} />
   );
-};
+}
 
 export default TaskField;

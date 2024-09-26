@@ -2,7 +2,9 @@ import { FiClock, FiEdit, FiTrash } from 'react-icons/fi';
 
 import React from 'react';
 
-const TaskListItem = ({ task, onMarkAsDone, onViewHistory, onEdit, onDelete }) => {
+function TaskListItem({
+  task, onMarkAsDone, onViewHistory, onEdit, onDelete,
+}) {
   const isColorLight = (hexColor) => {
     const color = hexColor.replace('#', '');
     const r = parseInt(color.substr(0, 2), 16);
@@ -64,6 +66,6 @@ const TaskListItem = ({ task, onMarkAsDone, onViewHistory, onEdit, onDelete }) =
       </div>
     </li>
   );
-};
+}
 
 export default TaskListItem;

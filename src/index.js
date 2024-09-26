@@ -1,12 +1,12 @@
 import './styles/index.css';
 
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { onMessage } from 'firebase/messaging';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import App from './components/App';
-import React from 'react';
-import { createRoot } from 'react-dom/client';
 import { messaging } from './services/firebaseConfig';
-import { onMessage } from 'firebase/messaging';
 
 onMessage(messaging, (payload) => {
   console.log('Message received in foreground: ', payload);
@@ -31,5 +31,5 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

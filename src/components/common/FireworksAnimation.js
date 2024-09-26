@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const FireworksAnimation = ({ onAnimationEnd }) => {
+function FireworksAnimation({ onAnimationEnd }) {
   useEffect(() => {
     const timer = setTimeout(onAnimationEnd, 2000);
     return () => clearTimeout(timer);
@@ -17,6 +17,6 @@ const FireworksAnimation = ({ onAnimationEnd }) => {
       </svg>
     </div>
   );
-};
+}
 
 export default FireworksAnimation;

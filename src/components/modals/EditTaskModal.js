@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-import ColorPicker from '../common/ColorPicker';
 import { FiX } from 'react-icons/fi';
+import ColorPicker from '../common/ColorPicker';
 import TaskField from '../tasks/TaskField';
 
-const EditTaskModal = ({ task, onClose, onSave }) => {
+function EditTaskModal({ task, onClose, onSave }) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [color, setColor] = useState(task.color);
@@ -22,7 +22,9 @@ const EditTaskModal = ({ task, onClose, onSave }) => {
   }, [onClose]);
 
   const handleSave = () => {
-    const updatedTask = { ...task, title, description, color };
+    const updatedTask = {
+      ...task, title, description, color,
+    };
     onSave(updatedTask);
   };
 
@@ -70,6 +72,6 @@ const EditTaskModal = ({ task, onClose, onSave }) => {
       </div>
     </div>
   );
-};
+}
 
 export default EditTaskModal;

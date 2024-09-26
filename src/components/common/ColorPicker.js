@@ -7,19 +7,21 @@ const availableColors = [
   '#d93e86', '#4f30ae',
 ];
 
-const ColorPicker = ({ selectedColor, onColorSelect }) => (
-  <div className="flex space-x-2">
-    {availableColors.map((color) => (
-      <button
-        key={color}
-        type="button"
-        className={`w-8 h-8 rounded-full border-2 focus:outline-none ${selectedColor === color ? 'border-white' : 'border-gray-700'}`}
-        style={{ backgroundColor: color }}
-        onClick={() => onColorSelect(color)}
-        aria-label={`Select color ${color}`}
-      />
-    ))}
-  </div>
-);
+function ColorPicker({ selectedColor, onColorSelect }) {
+  return (
+    <div className="flex space-x-2">
+      {availableColors.map((color) => (
+        <button
+          key={color}
+          type="button"
+          className={`w-8 h-8 rounded-full border-2 focus:outline-none ${selectedColor === color ? 'border-white' : 'border-gray-700'}`}
+          style={{ backgroundColor: color }}
+          onClick={() => onColorSelect(color)}
+          aria-label={`Select color ${color}`}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default ColorPicker;

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 
 import ColorPicker from '../common/ColorPicker';
-import TaskField from '../tasks/TaskField';
+import TaskField from './TaskField';
 import { db } from '../../services/firebaseConfig';
 import { processTaskInputWithLLM } from '../../services/openaiApi';
 
-const TaskSubmissionForm = ({ user, onTaskAdded }) => {
+function TaskSubmissionForm({ user, onTaskAdded }) {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskColor, setTaskColor] = useState('#9151b0'); // Default to lavenderPurple
   const [taskDescription, setTaskDescription] = useState('');
@@ -86,7 +86,7 @@ const TaskSubmissionForm = ({ user, onTaskAdded }) => {
             className={`w-full px-6 py-3 text-lg font-semibold text-white rounded-md transition ${loading
               ? 'bg-gray-600 cursor-not-allowed'
               : 'bg-lavenderPurple hover:bg-deepLavender'
-              }`}
+            }`}
             disabled={loading}
             aria-label="Submit Task"
           >
@@ -99,6 +99,6 @@ const TaskSubmissionForm = ({ user, onTaskAdded }) => {
       </div>
     </div>
   );
-};
+}
 
 export default TaskSubmissionForm;

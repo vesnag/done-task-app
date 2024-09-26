@@ -1,9 +1,9 @@
 const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '[::1]' ||
-  window.location.hostname.match(
-    /^127(?:\.\d+){3}$/ // 127.0.0.1/8 is considered localhost for IPv4.
-  )
+  window.location.hostname === 'localhost'
+  || window.location.hostname === '[::1]'
+  || window.location.hostname.match(
+    /^127(?:\.\d+){3}$/, // 127.0.0.1/8 is considered localhost for IPv4.
+  ),
 );
 
 export function register(config) {
@@ -21,8 +21,8 @@ export function register(config) {
 
         navigator.serviceWorker.ready.then(() => {
           console.log(
-            'This web app is being served cache-first by a service ' +
-            'worker. To learn more, visit https://cra.link/PWA'
+            'This web app is being served cache-first by a service '
+            + 'worker. To learn more, visit https://cra.link/PWA',
           );
         });
       } else {
@@ -48,8 +48,8 @@ function registerValidSW(swUrl, config) {
               // but the previous service worker will still serve the older content until all
               // client tabs are closed.
               console.log(
-                'New content is available and will be used when all ' +
-                'tabs for this page are closed. See https://cra.link/PWA.'
+                'New content is available and will be used when all '
+                + 'tabs for this page are closed. See https://cra.link/PWA.',
               );
 
               if (config && config.onUpdate) {
@@ -80,8 +80,8 @@ function checkValidServiceWorker(swUrl, config) {
     .then((response) => {
       const contentType = response.headers.get('content-type');
       if (
-        response.status === 404 ||
-        (contentType != null && contentType.indexOf('javascript') === -1)
+        response.status === 404
+        || (contentType != null && contentType.indexOf('javascript') === -1)
       ) {
         navigator.serviceWorker.ready.then((registration) => {
           registration.unregister().then(() => {
@@ -94,7 +94,7 @@ function checkValidServiceWorker(swUrl, config) {
     })
     .catch(() => {
       console.log(
-        'No internet connection found. App is running in offline mode.'
+        'No internet connection found. App is running in offline mode.',
       );
     });
 }
