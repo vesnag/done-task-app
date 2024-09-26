@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 
-import ColorPicker from './ColorPicker';
+import ColorPicker from '../common/ColorPicker';
 import { FiX } from 'react-icons/fi';
-import { db } from './firebaseConfig';
+import TaskField from '../tasks/TaskField';
+import { db } from '../../services/firebaseConfig';
 
-function EditTaskModal({ task, onClose, onSave }) {
+const EditTaskModal = ({ task, onClose, onSave }) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [color, setColor] = useState(task.color);
@@ -25,11 +26,7 @@ function EditTaskModal({ task, onClose, onSave }) {
   const handleSave = async () => {
     try {
       const taskRef = doc(db, 'tasks', task.id);
-      await updateDoc(taskRef, {
-        title,
-        description,
-        color,
-      });
+      await updateDoc(taskRef, { title, description, color });
       onSave();
     } catch (error) {
       console.error('Error updating task:', error);
@@ -47,23 +44,20 @@ function EditTaskModal({ task, onClose, onSave }) {
           <FiX size={24} />
         </button>
         <h2 className="text-2xl font-bold mb-4">Edit Task</h2>
-        <input
+        <TaskField
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title"
-          className="w-full p-2 mb-4 border border-gray-600 rounded bg-gray-700 text-white"
         />
-        <textarea
+        <TaskField
+          type="textarea"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
-          className="w-full p-2 mb-4 border border-gray-600 rounded bg-gray-700 text-white"
         />
         <div>
-          <label className="block text-lg font-medium text-gray-300">
-            Task Color
-          </label>
+          <label className="block text-lg font-medium text-gray-300">Task Color</label>
           <ColorPicker selectedColor={color} onColorSelect={setColor} />
         </div>
         <div className="flex justify-end space-x-2 mt-4">
@@ -83,6 +77,6 @@ function EditTaskModal({ task, onClose, onSave }) {
       </div>
     </div>
   );
-}
+};
 
 export default EditTaskModal;

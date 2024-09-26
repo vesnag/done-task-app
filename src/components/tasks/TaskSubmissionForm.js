@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { collection, doc, setDoc } from 'firebase/firestore';
 
-import ColorPicker from './ColorPicker';
-import { db } from './firebaseConfig';
-import { processTaskInputWithLLM } from './openaiApi';
+import ColorPicker from '../common/ColorPicker';
+import TaskField from './TaskField';
+import { db } from '../../services/firebaseConfig';
+import { processTaskInputWithLLM } from '../../services/openaiApi';
 
-function TaskSubmissionForm({ user }) {
+const TaskSubmissionForm = ({ user }) => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskColor, setTaskColor] = useState('#9151b0'); // Default to lavenderPurple
   const [taskDescription, setTaskDescription] = useState('');
@@ -59,36 +60,20 @@ function TaskSubmissionForm({ user }) {
         {editTaskId ? 'Edit Task' : 'Submit a New Task'}
       </h2>
       <div className="space-y-6">
-        <div>
-          <label htmlFor="taskTitle" className="block text-lg font-medium text-gray-300">
-            Task Title
-          </label>
-          <input
-            type="text"
-            id="taskTitle"
-            value={taskTitle}
-            onChange={(e) => setTaskTitle(e.target.value)}
-            className="mt-1 block w-full px-4 py-2 border border-gray-700 rounded-md bg-gray-700 text-white focus:ring-lavenderPurple focus:border-lavenderPurple"
-            disabled={loading}
-            aria-required="true"
-            placeholder="Enter task title"
-          />
-        </div>
-        <div>
-          <label htmlFor="taskDescription" className="block text-lg font-medium text-gray-300">
-            Task Description
-          </label>
-          <textarea
-            id="taskDescription"
-            className="mt-1 block w-full px-4 py-2 border border-gray-700 rounded-md bg-gray-700 text-white focus:ring-lavenderPurple focus:border-lavenderPurple"
-            rows="4"
-            placeholder="Describe when the task should be done (e.g., every Monday morning)"
-            value={taskDescription}
-            onChange={(e) => setTaskDescription(e.target.value)}
-            disabled={loading}
-            aria-required="true"
-          />
-        </div>
+        <TaskField
+          type="text"
+          value={taskTitle}
+          onChange={(e) => setTaskTitle(e.target.value)}
+          placeholder="Enter task title"
+          disabled={loading}
+        />
+        <TaskField
+          type="textarea"
+          value={taskDescription}
+          onChange={(e) => setTaskDescription(e.target.value)}
+          placeholder="Describe when the task should be done (e.g., every Monday morning)"
+          disabled={loading}
+        />
         <div>
           <label className="block text-lg font-medium text-gray-300">
             Task Color
@@ -114,6 +99,6 @@ function TaskSubmissionForm({ user }) {
       </div>
     </div>
   );
-}
+};
 
 export default TaskSubmissionForm;

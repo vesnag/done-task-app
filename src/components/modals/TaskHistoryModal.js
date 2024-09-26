@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 import { FiX } from 'react-icons/fi';
+import HistoryList from '../common/HistoryList';
+import PaginationControls from '../common/PaginationControls';
 
-function TaskHistoryModal({ task, history = [], onClose }) {
+const TaskHistoryModal = ({ task, history = [], onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -45,36 +47,13 @@ function TaskHistoryModal({ task, history = [], onClose }) {
         </button>
         <h3 className="text-2xl font-bold text-lavenderPurple mb-4">Task History</h3>
         <p className="text-lg mb-4">History of completions for <span className="font-semibold text-deepLavender">"{task.title}"</span>:</p>
-        <ul className="space-y-2">
-          {paginatedHistory.length > 0 ? (
-            paginatedHistory.map((timestamp, index) => (
-              <li key={index} className="text-sm text-gray-300 bg-gray-700 p-2 rounded-md">
-                {new Date(timestamp.seconds * 1000).toLocaleString()}
-              </li>
-            ))
-          ) : (
-            <li className="text-sm text-gray-300">No completions yet.</li>
-          )}
-        </ul>
-        <div className="mt-6 flex justify-between items-center">
-          <button
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-            className="bg-lavenderPurple text-white px-4 py-2 rounded-lg hover:bg-deepLavender transition disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <span className="text-sm text-gray-300">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className="bg-lavenderPurple text-white px-4 py-2 rounded-lg hover:bg-deepLavender transition disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        <HistoryList history={paginatedHistory} />
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPrevious={handlePreviousPage}
+          onNext={handleNextPage}
+        />
         <div className="mt-6 flex justify-end">
           <button
             onClick={onClose}
@@ -86,6 +65,6 @@ function TaskHistoryModal({ task, history = [], onClose }) {
       </div>
     </div>
   );
-}
+};
 
 export default TaskHistoryModal;
