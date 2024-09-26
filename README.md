@@ -1,5 +1,15 @@
 # DoneTask
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <circle cx="32" cy="32" r="30" fill="#1a202c"/> <!-- Dark Background Circle -->
+  <g fill="none" stroke="#f774aa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Gear Shape -->
+    <path d="M32 12v4M32 48v4M12 32h4M48 32h4M20.24 20.24l2.83 2.83M40.93 40.93l2.83 2.83M20.24 43.76l2.83-2.83M40.93 23.07l2.83-2.83"/>
+    <!-- Checkmark -->
+    <polyline points="24,32 30,38 40,28" stroke="#f774aa" stroke-width="4" fill="none"/>
+  </g>
+</svg>
+
 **DoneTask** is a task management app designed to help users keep track of their recurring tasks (e.g., daily, weekly, monthly). The app goes beyond simple reminders by learning from the user’s task completion habits and offering **smart notifications** based on actual behavior. DoneTask aims to reduce the cognitive load of planning and to provide personalized assistance to keep users on track.
 
 ![App Screenshot](./images/appScreenshot.png)
@@ -56,6 +66,25 @@ The app will use AI/ML to:
 - Analyse historical task completion patterns to predict future task completion times.
 - Adjust notifications dynamically based on user behavior (e.g., adjusting a task from "Monday morning" to "Monday at 9:30 AM" based on previous completions).
 - A machine learning model will run either client-side (`tensorflow.js`) or server-side (Google Cloud AI, AWS SageMaker) to optimize notification timings.
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your `.env` file:
+
+```plaintext
+REACT_APP_OPENAI_API_KEY=sk-proj-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+REACT_APP_VAPID_KEY=BK2gx6QeH4GW-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+SKIP_PREFLIGHT_CHECK=true
+
+REACT_APP_FIREBASE_API_KEY=AIzaSyA5Qj3cXXXXXXXXXXXXXXXXXXXXXXXX
+REACT_APP_FIREBASE_AUTH_DOMAIN=your-app.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your-app
+REACT_APP_FIREBASE_STORAGE_BUCKET=your-app.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=123456789012
+REACT_APP_FIREBASE_APP_ID=1:123456789012:web:XXXXXXXXXXXXXXXX
+REACT_APP_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+
+REACT_APP_USE_FAKE_API=true
 
 ## Visit the Website
 
