@@ -1,6 +1,4 @@
-import '../styles/App.css';
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { auth, db, googleProvider, messaging } from '../services/firebaseConfig';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
@@ -8,6 +6,7 @@ import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import Header from './common/Header';
 import LoginPrompt from './common/LoginPrompt';
 import NotificationButton from './common/NotificationButton';
+import { BrowserRouter as Router } from 'react-router-dom';
 import TaskSubmissionForm from './tasks/TaskSubmissionForm';
 import YourTasks from './tasks/YourTasks';
 import { getToken } from 'firebase/messaging';
@@ -16,6 +15,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const yourTasksRef = useRef(null); // Initialize yourTasksRef
 
   useEffect(() => {
     document.documentElement.classList.add('dark');
@@ -119,33 +119,42 @@ function App() {
     setShowForm(!showForm);
   };
 
+  const onTaskAdded = (newTask) => {
+    console.log('Task added, refresh the task list');
+    if (yourTasksRef.current) {
+      yourTasksRef.current.addTask(newTask);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-darkBg text-white font-sans flex flex-col">
-      <div className="flex-grow container mx-auto p-4 sm:p-6">
-        {user ? (
-          <>
-            <Header user={user} onLogout={handleLogout} />
-            <YourTasks user={user} />
-            <div className="mt-6 flex flex-col space-y-8">
-              <button
-                onClick={toggleFormVisibility}
-                className="w-full px-4 py-3 bg-brightMagenta text-white text-lg font-semibold rounded-md hover:bg-deepLavender transition"
-                aria-label={showForm ? 'Close form' : 'Add new task'}
-              >
-                {showForm ? 'Close Form' : 'Add New Task'}
-              </button>
-              {showForm && <TaskSubmissionForm user={user} />}
-              <NotificationButton
-                notificationsEnabled={notificationsEnabled}
-                onToggle={toggleNotificationPermission}
-              />
-            </div>
-          </>
-        ) : (
-          <LoginPrompt onLogin={handleLogin} />
-        )}
+    <Router>
+      <div className="min-h-screen bg-darkBg text-white font-sans flex flex-col">
+        <div className="flex-grow container mx-auto p-4 sm:p-6">
+          {user ? (
+            <>
+              <Header user={user} onLogout={handleLogout} />
+              <YourTasks ref={yourTasksRef} user={user} /> {/* Pass the ref */}
+              <div className="mt-6 flex flex-col space-y-8">
+                <button
+                  onClick={toggleFormVisibility}
+                  className="w-full px-4 py-3 bg-brightMagenta text-white text-lg font-semibold rounded-md hover:bg-deepLavender transition"
+                  aria-label={showForm ? 'Close form' : 'Add new task'}
+                >
+                  {showForm ? 'Close Form' : 'Add New Task'}
+                </button>
+                {showForm && <TaskSubmissionForm user={user} onTaskAdded={onTaskAdded} />}
+                <NotificationButton
+                  notificationsEnabled={notificationsEnabled}
+                  onToggle={toggleNotificationPermission}
+                />
+              </div>
+            </>
+          ) : (
+            <LoginPrompt onLogin={handleLogin} />
+          )}
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 

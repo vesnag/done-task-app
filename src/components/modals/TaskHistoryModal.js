@@ -48,12 +48,14 @@ const TaskHistoryModal = ({ task, history = [], onClose }) => {
         <h3 className="text-2xl font-bold text-lavenderPurple mb-4">Task History</h3>
         <p className="text-lg mb-4">History of completions for <span className="font-semibold text-deepLavender">"{task.title}"</span>:</p>
         <HistoryList history={paginatedHistory} />
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPrevious={handlePreviousPage}
-          onNext={handleNextPage}
-        />
+        {totalPages > 1 && (
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPrevious={handlePreviousPage}
+            onNext={handleNextPage}
+          />
+        )}
         <div className="mt-6 flex justify-end">
           <button
             onClick={onClose}

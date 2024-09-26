@@ -1,7 +1,7 @@
 # DoneTask
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <circle cx="32" cy="32" r="30" fill="#1a202c"/> <!-- Dark Background Circle -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="90" height="90">
+  <circle cx="32" cy="32" r="30" fill="#1a202c"/>
   <g fill="none" stroke="#f774aa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
     <!-- Gear Shape -->
     <path d="M32 12v4M32 48v4M12 32h4M48 32h4M20.24 20.24l2.83 2.83M40.93 40.93l2.83 2.83M20.24 43.76l2.83-2.83M40.93 23.07l2.83-2.83"/>
@@ -89,3 +89,6 @@ REACT_APP_USE_FAKE_API=true
 ## Visit the Website
 
 You can access the live version of the app here: [DoneTask Website](https://donetask-f64fe.web.app/)
+
+
+#add ErrorBoundary.js

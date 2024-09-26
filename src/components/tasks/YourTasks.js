@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 
 import ModalHandler from '../modals/ModalHandler';
 import TaskListItem from './TaskListItem';
 import { db } from '../../services/firebaseConfig';
 
-function YourTasks({ user }) {
+const YourTasks = forwardRef(({ user }, ref) => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -29,6 +29,12 @@ function YourTasks({ user }) {
       fetchTasks();
     }
   }, [user, fetchTasks]);
+
+  useImperativeHandle(ref, () => ({
+    addTask(newTask) {
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+    }
+  }));
 
   const handleEditTask = (task) => {
     setSelectedTask(task);
@@ -77,8 +83,16 @@ function YourTasks({ user }) {
     setShowEditModal(false);
   };
 
-  const saveEdit = () => {
-    fetchTasks();
+  const saveEdit = async (updatedTask) => {
+    try {
+      const taskRef = doc(db, 'tasks', updatedTask.id);
+      await updateDoc(taskRef, updatedTask);
+      setMessage('Task updated successfully!');
+      fetchTasks();
+    } catch (error) {
+      console.error('Error updating task:', error);
+      setMessage('Error updating task.');
+    }
     setShowEditModal(false);
   };
 
@@ -118,6 +132,6 @@ function YourTasks({ user }) {
       {message && <p className="mt-4 text-center text-rosePink font-medium">{message}</p>}
     </div>
   );
-}
+});
 
 export default YourTasks;

@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 
 import ColorPicker from '../common/ColorPicker';
-import TaskField from './TaskField';
+import TaskField from '../tasks/TaskField';
 import { db } from '../../services/firebaseConfig';
 import { processTaskInputWithLLM } from '../../services/openaiApi';
 
-const TaskSubmissionForm = ({ user }) => {
+const TaskSubmissionForm = ({ user, onTaskAdded }) => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskColor, setTaskColor] = useState('#9151b0'); // Default to lavenderPurple
   const [taskDescription, setTaskDescription] = useState('');
   const [message, setMessage] = useState('');
-  const [editTaskId, setEditTaskId] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleTaskSubmission = async () => {
+    console.log('handleTaskSubmission called');
     if (!taskTitle || !taskDescription) {
       setMessage('Please enter task title and description.');
       return;
@@ -24,6 +24,7 @@ const TaskSubmissionForm = ({ user }) => {
     setMessage('');
 
     try {
+      console.log('Processing task input with LLM');
       const parsedTask = await processTaskInputWithLLM(taskDescription);
 
       const taskData = {
@@ -34,18 +35,17 @@ const TaskSubmissionForm = ({ user }) => {
         userId: user.uid,
       };
 
-      if (editTaskId) {
-        await setDoc(doc(db, 'tasks', editTaskId), taskData);
-        setMessage('Task updated successfully!');
-      } else {
-        await setDoc(doc(collection(db, 'tasks')), taskData);
-        setMessage('Task submitted successfully!');
+      console.log('Adding new task');
+      const taskRef = await addDoc(collection(db, 'tasks'), taskData);
+      setMessage('Task submitted successfully!');
+      console.log('Task added, calling onTaskAdded');
+      if (onTaskAdded) {
+        onTaskAdded({ id: taskRef.id, ...taskData }); // Pass the new task data
       }
 
       setTaskTitle('');
       setTaskDescription('');
       setTaskColor('#9151b0');
-      setEditTaskId(null);
     } catch (error) {
       console.error('Error submitting task:', error);
       setMessage(error.message || 'Error submitting task.');
@@ -57,7 +57,7 @@ const TaskSubmissionForm = ({ user }) => {
   return (
     <div className="mt-6 p-6 bg-gray-800 rounded-lg shadow-md">
       <h2 className="text-2xl sm:text-3xl font-bold text-lavenderPurple mb-6">
-        {editTaskId ? 'Edit Task' : 'Submit a New Task'}
+        Submit a New Task
       </h2>
       <div className="space-y-6">
         <TaskField
@@ -88,9 +88,9 @@ const TaskSubmissionForm = ({ user }) => {
               : 'bg-lavenderPurple hover:bg-deepLavender'
               }`}
             disabled={loading}
-            aria-label={editTaskId ? 'Update Task' : 'Submit Task'}
+            aria-label="Submit Task"
           >
-            {loading ? 'Processing...' : editTaskId ? 'Update Task' : 'Submit Task'}
+            {loading ? 'Processing...' : 'Submit Task'}
           </button>
         </div>
         {message && (

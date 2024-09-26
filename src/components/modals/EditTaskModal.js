@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
 
 import ColorPicker from '../common/ColorPicker';
 import { FiX } from 'react-icons/fi';
 import TaskField from '../tasks/TaskField';
-import { db } from '../../services/firebaseConfig';
 
 const EditTaskModal = ({ task, onClose, onSave }) => {
   const [title, setTitle] = useState(task.title);
@@ -23,14 +21,9 @@ const EditTaskModal = ({ task, onClose, onSave }) => {
     };
   }, [onClose]);
 
-  const handleSave = async () => {
-    try {
-      const taskRef = doc(db, 'tasks', task.id);
-      await updateDoc(taskRef, { title, description, color });
-      onSave();
-    } catch (error) {
-      console.error('Error updating task:', error);
-    }
+  const handleSave = () => {
+    const updatedTask = { ...task, title, description, color };
+    onSave(updatedTask);
   };
 
   return (

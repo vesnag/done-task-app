@@ -1,8 +1,10 @@
 import { FiLogOut } from 'react-icons/fi';
+import Logo from './Logo'; // Ensure this import is correct
 import React from 'react';
 
 const Header = ({ user, onLogout }) => (
   <header className="flex justify-between items-center mb-6">
+    <Logo /> {/* Default size */}
     <h1 className="text-2xl sm:text-3xl font-extrabold text-lavenderPurple">
       Welcome, {user.displayName}!
     </h1>
