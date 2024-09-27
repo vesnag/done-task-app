@@ -1,21 +1,23 @@
-import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { deleteDoc, doc, setDoc } from 'firebase/firestore';
-import { getToken } from 'firebase/messaging';
-import React, { useEffect, useRef, useState } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+/* eslint-disable import/order */
+/* eslint-disable-next-line no-console */
 
+import React, { useEffect, useRef, useState } from 'react';
 import {
   auth,
   db,
   googleProvider,
   messaging,
 } from '../services/firebaseConfig';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 import Header from './common/Header';
 import LoginPrompt from './common/LoginPrompt';
 import NotificationButton from './common/NotificationButton';
+import { BrowserRouter as Router } from 'react-router-dom';
 import TaskSubmissionForm from './tasks/TaskSubmissionForm';
 import YourTasks from './tasks/YourTasks';
+import { getToken } from 'firebase/messaging';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -135,13 +137,12 @@ function App() {
               <Header user={user} onLogout={handleLogout} />
               <YourTasks ref={yourTasksRef} user={user} />
               {' '}
-              {/* Pass the ref */}
               <div className="mt-6 flex flex-col space-y-8">
                 <button
                   onClick={toggleFormVisibility}
                   className="w-full px-4 py-3 bg-brightMagenta text-white text-lg font-semibold rounded-md hover:bg-deepLavender transition"
                   aria-label={showForm ? 'Close form' : 'Add new task'}
-                  type="button" // Add type attribute
+                  type="button"
                 >
                   {showForm ? 'Close Form' : 'Add New Task'}
                 </button>

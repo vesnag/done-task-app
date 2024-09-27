@@ -1,4 +1,5 @@
 /* eslint-disable import/order */
+/* eslint-disable-next-line no-console */
 
 import './styles/index.css';
 
