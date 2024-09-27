@@ -1,8 +1,7 @@
+import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
-
 import { getFirestore } from 'firebase/firestore';
 import { getMessaging } from 'firebase/messaging';
-import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,

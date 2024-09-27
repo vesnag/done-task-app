@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react';
 
 function NotificationButton({ notificationsEnabled, onToggle }) {
@@ -11,6 +13,7 @@ function NotificationButton({ notificationsEnabled, onToggle }) {
       aria-label={
       notificationsEnabled ? 'Disable notifications' : 'Enable notifications'
     }
+      type="button"
     >
       {notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications'}
     </button>

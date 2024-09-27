@@ -1,10 +1,13 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+
 import React, { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 
 import ColorPicker from '../common/ColorPicker';
 import TaskField from './TaskField';
 import { db } from '../../services/firebaseConfig';
-import { processTaskInputWithLLM } from '../../services/openaiApi';
+import processTaskInputWithLLM from '../../services/openaiApi';
 
 function TaskSubmissionForm({ user, onTaskAdded }) {
   const [taskTitle, setTaskTitle] = useState('');
@@ -75,10 +78,10 @@ function TaskSubmissionForm({ user, onTaskAdded }) {
           disabled={loading}
         />
         <div>
-          <label className="block text-lg font-medium text-gray-300">
+          <label className="block text-lg font-medium text-gray-300" htmlFor="task-color-picker">
             Task Color
           </label>
-          <ColorPicker selectedColor={taskColor} onColorSelect={setTaskColor} />
+          <ColorPicker selectedColor={taskColor} onColorSelect={setTaskColor} id="task-color-picker" />
         </div>
         <div>
           <button
@@ -89,6 +92,7 @@ function TaskSubmissionForm({ user, onTaskAdded }) {
             }`}
             disabled={loading}
             aria-label="Submit Task"
+            type="button" // Add type attribute
           >
             {loading ? 'Processing...' : 'Submit Task'}
           </button>

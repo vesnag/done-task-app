@@ -1,5 +1,8 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable import/order */
+
+import Logo from './Logo';
 import React from 'react';
-import Logo from './Logo'; // Import the Logo component
 
 function LoginPrompt({ onLogin }) {
   return (
@@ -15,6 +18,7 @@ function LoginPrompt({ onLogin }) {
         onClick={onLogin}
         className="px-6 py-3 bg-deepLavender text-white text-lg font-semibold rounded-md hover:bg-royalPurple transition"
         aria-label="Login with Google"
+        type="button"
       >
         Login with Google
       </button>

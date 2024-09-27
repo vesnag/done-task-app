@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react';
 
 function TaskField({
@@ -11,9 +13,21 @@ function TaskField({
   };
 
   return type === 'textarea' ? (
-    <textarea {...commonProps} rows="4" />
+    <textarea
+      value={commonProps.value}
+      onChange={commonProps.onChange}
+      placeholder={commonProps.placeholder}
+      className={commonProps.className}
+      rows="4"
+    />
   ) : (
-    <input type={type} {...commonProps} />
+    <input
+      type={type}
+      value={commonProps.value}
+      onChange={commonProps.onChange}
+      placeholder={commonProps.placeholder}
+      className={commonProps.className}
+    />
   );
 }
 

@@ -12,7 +12,7 @@ const fakeProcessTaskInputWithLLM = async (taskDescription) => {
   };
 };
 
-export const processTaskInputWithLLM = async (taskDescription) => {
+const processTaskInputWithLLM = async (taskDescription) => {
   console.log('processTaskInputWithLLM use fake API:', process.env.USE_FAKE_API);
   if (process.env.USE_FAKE_API) {
     return fakeProcessTaskInputWithLLM(taskDescription);
@@ -49,3 +49,5 @@ export const processTaskInputWithLLM = async (taskDescription) => {
     throw error;
   }
 };
+
+export default processTaskInputWithLLM;

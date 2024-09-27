@@ -1,10 +1,10 @@
+import { fireEvent, render, screen } from '@testing-library/react';
 import {
   GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut,
 } from 'firebase/auth';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { auth, googleProvider } from '../services/firebaseConfig';
 
 import App from '../components/App';
+import { auth, googleProvider } from '../services/firebaseConfig';
 
 jest.mock('firebase/auth', () => ({
   getAuth: jest.fn(() => ({

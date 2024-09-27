@@ -1,12 +1,24 @@
+/* eslint-disable import/order */
+
 import './styles/index.css';
 
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { onMessage } from 'firebase/messaging';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import App from './components/App';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 import { messaging } from './services/firebaseConfig';
+import { onMessage } from 'firebase/messaging';
+
+const createNotification = (title, options) => new Notification(title, options);
+
+const showNotification = (title, options) => {
+  if (Notification.permission !== 'granted') {
+    console.log('Notifications are not permitted.');
+    return;
+  }
+  createNotification(title, options);
+};
 
 onMessage(messaging, (payload) => {
   console.log('Message received in foreground: ', payload);
@@ -17,11 +29,7 @@ onMessage(messaging, (payload) => {
     icon: '/firebase-logo.png',
   };
 
-  if (Notification.permission === 'granted') {
-    new Notification(notificationTitle, notificationOptions);
-  } else {
-    console.log('Notifications are not permitted.');
-  }
+  showNotification(notificationTitle, notificationOptions);
 });
 
 serviceWorkerRegistration.register();

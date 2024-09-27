@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,8 +10,21 @@ function Logo({ width = 64, height = 64 }) {
     navigate('/');
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      navigate('/');
+    }
+  };
+
   return (
-    <div onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+    <div
+      onClick={handleLogoClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      style={{ cursor: 'pointer' }}
+      aria-label="Navigate to home" // Add aria-label for accessibility
+    >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width={width} height={height}>
         <circle cx="32" cy="32" r="30" fill="#1a202c" />
         <g fill="none" stroke="#f774aa" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">

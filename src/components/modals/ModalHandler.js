@@ -1,6 +1,9 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
+/* eslint-disable import/order */
+
 import ConfirmationModal from './ConfirmationModal';
 import EditTaskModal from './EditTaskModal';
+import React from 'react';
 import TaskHistoryModal from './TaskHistoryModal';
 
 function ModalHandler({

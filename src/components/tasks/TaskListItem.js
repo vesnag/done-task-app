@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import { FiClock, FiEdit, FiTrash } from 'react-icons/fi';
 
 import React from 'react';
@@ -33,6 +35,7 @@ function TaskListItem({
           className="px-4 py-2 text-lg font-bold rounded-md transition transform hover:scale-105 focus:scale-105"
           style={{ backgroundColor: task.color, color: textColor }}
           aria-label="Mark task as done"
+          type="button"
         >
           Done
         </button>
@@ -42,6 +45,7 @@ function TaskListItem({
           style={{ color: task.color }}
           aria-label="View task history"
           title="View Task History"
+          type="button"
         >
           <FiClock size={20} />
         </button>
@@ -51,6 +55,7 @@ function TaskListItem({
           style={{ color: task.color }}
           aria-label="Edit task"
           title="Edit Task"
+          type="button"
         >
           <FiEdit size={20} />
         </button>
@@ -60,6 +65,7 @@ function TaskListItem({
           style={{ color: task.color }}
           aria-label="Delete task"
           title="Delete Task"
+          type="button"
         >
           <FiTrash size={20} />
         </button>

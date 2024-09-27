@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react';
 
 function PaginationControls({
@@ -9,6 +11,7 @@ function PaginationControls({
         onClick={onPrevious}
         disabled={currentPage === 1}
         className="bg-lavenderPurple text-white px-4 py-2 rounded-lg hover:bg-deepLavender transition disabled:opacity-50"
+        type="button"
       >
         Previous
       </button>
@@ -25,6 +28,7 @@ function PaginationControls({
         onClick={onNext}
         disabled={currentPage === totalPages}
         className="bg-lavenderPurple text-white px-4 py-2 rounded-lg hover:bg-deepLavender transition disabled:opacity-50"
+        type="button"
       >
         Next
       </button>

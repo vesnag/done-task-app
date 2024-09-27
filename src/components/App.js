@@ -1,10 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { getToken } from 'firebase/messaging';
+import React, { useEffect, useRef, useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+
 import {
-  auth, db, googleProvider, messaging,
+  auth,
+  db,
+  googleProvider,
+  messaging,
 } from '../services/firebaseConfig';
 
 import Header from './common/Header';
@@ -23,6 +27,10 @@ function App() {
     document.documentElement.classList.add('dark');
   }, []);
 
+  const checkNotificationPermission = () => {
+    setNotificationsEnabled(Notification.permission === 'granted');
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -30,10 +38,6 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
-
-  const checkNotificationPermission = () => {
-    setNotificationsEnabled(Notification.permission === 'granted');
-  };
 
   const requestNotificationPermission = async () => {
     try {
@@ -45,6 +49,29 @@ function App() {
       }
     } catch (error) {
       console.error('Error requesting notification permission:', error);
+    }
+  };
+
+  const saveTokenToServer = async (userId, token) => {
+    try {
+      await setDoc(doc(db, 'users', userId), { fcmToken: token });
+    } catch (error) {
+      console.error('Error saving FCM token to server:', error);
+    }
+  };
+
+  const getFcmToken = async (userId) => {
+    try {
+      const currentToken = await getToken(messaging, {
+        vapidKey: process.env.REACT_APP_VAPID_KEY,
+      });
+      if (currentToken) {
+        await saveTokenToServer(userId, currentToken);
+      } else {
+        console.log('No registration token available. Request permission to generate one.');
+      }
+    } catch (error) {
+      console.error('An error occurred while retrieving FCM token:', error);
     }
   };
 
@@ -75,14 +102,6 @@ function App() {
     }
   };
 
-  const toggleNotificationPermission = async () => {
-    if (notificationsEnabled) {
-      await disableNotifications();
-    } else {
-      await requestNotificationPermission();
-    }
-  };
-
   const disableNotifications = async () => {
     try {
       if (user) {
@@ -95,26 +114,11 @@ function App() {
     }
   };
 
-  const getFcmToken = async (userId) => {
-    try {
-      const currentToken = await getToken(messaging, {
-        vapidKey: process.env.REACT_APP_VAPID_KEY,
-      });
-      if (currentToken) {
-        await saveTokenToServer(userId, currentToken);
-      } else {
-        console.log('No registration token available. Request permission to generate one.');
-      }
-    } catch (error) {
-      console.error('An error occurred while retrieving FCM token:', error);
-    }
-  };
-
-  const saveTokenToServer = async (userId, token) => {
-    try {
-      await setDoc(doc(db, 'users', userId), { fcmToken: token });
-    } catch (error) {
-      console.error('Error saving FCM token to server:', error);
+  const toggleNotificationPermission = async () => {
+    if (notificationsEnabled) {
+      await disableNotifications();
+    } else {
+      await requestNotificationPermission();
     }
   };
 
@@ -144,6 +148,7 @@ function App() {
                   onClick={toggleFormVisibility}
                   className="w-full px-4 py-3 bg-brightMagenta text-white text-lg font-semibold rounded-md hover:bg-deepLavender transition"
                   aria-label={showForm ? 'Close form' : 'Add new task'}
+                  type="button" // Add type attribute
                 >
                   {showForm ? 'Close Form' : 'Add New Task'}
                 </button>

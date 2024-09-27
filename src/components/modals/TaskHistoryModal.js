@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable import/order */
+
 import React, { useEffect, useState } from 'react';
 
 import { FiX } from 'react-icons/fi';
@@ -21,7 +24,10 @@ function TaskHistoryModal({ task, history = [], onClose }) {
   }, [onClose]);
 
   const totalPages = Math.ceil(history.length / itemsPerPage);
-  const paginatedHistory = history.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedHistory = history.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -42,6 +48,7 @@ function TaskHistoryModal({ task, history = [], onClose }) {
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"
           aria-label="Close"
+          type="button" // Add type attribute
         >
           <FiX size={24} />
         </button>
@@ -49,9 +56,9 @@ function TaskHistoryModal({ task, history = [], onClose }) {
         <p className="text-lg mb-4">
           History of completions for
           <span className="font-semibold text-deepLavender">
-            "
+            &quot;
             {task.title}
-            "
+            &quot;
           </span>
           :
         </p>
@@ -68,6 +75,7 @@ function TaskHistoryModal({ task, history = [], onClose }) {
           <button
             onClick={onClose}
             className="bg-lavenderPurple text-white px-4 py-2 rounded-lg hover:bg-deepLavender transition"
+            type="button" // Add type attribute
           >
             Close
           </button>

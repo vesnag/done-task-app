@@ -6,38 +6,13 @@ const isLocalhost = Boolean(
   ),
 );
 
-export function register(config) {
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-    const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
-    if (publicUrl.origin !== window.location.origin) {
-      return;
-    }
-
-    window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/firebase-messaging-sw.js`;
-
-      if (isLocalhost) {
-        checkValidServiceWorker(swUrl, config);
-
-        navigator.serviceWorker.ready.then(() => {
-          console.log(
-            'This web app is being served cache-first by a service '
-            + 'worker. To learn more, visit https://cra.link/PWA',
-          );
-        });
-      } else {
-        registerValidSW(swUrl, config);
-      }
-    });
-  }
-}
-
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
+      const reg = registration; // Create a new variable to avoid reassigning the parameter
+      reg.onupdatefound = () => {
+        const installingWorker = reg.installing;
         if (installingWorker == null) {
           return;
         }
@@ -53,7 +28,7 @@ function registerValidSW(swUrl, config) {
               );
 
               if (config && config.onUpdate) {
-                config.onUpdate(registration);
+                config.onUpdate(reg);
               }
             } else {
               // At this point, everything has been pre-cached.
@@ -61,7 +36,7 @@ function registerValidSW(swUrl, config) {
               console.log('Content is cached for offline use.');
 
               if (config && config.onSuccess) {
-                config.onSuccess(registration);
+                config.onSuccess(reg);
               }
             }
           }
@@ -97,6 +72,32 @@ function checkValidServiceWorker(swUrl, config) {
         'No internet connection found. App is running in offline mode.',
       );
     });
+}
+
+export function register(config) {
+  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
+    if (publicUrl.origin !== window.location.origin) {
+      return;
+    }
+
+    window.addEventListener('load', () => {
+      const swUrl = `${process.env.PUBLIC_URL}/firebase-messaging-sw.js`;
+
+      if (isLocalhost) {
+        checkValidServiceWorker(swUrl, config);
+
+        navigator.serviceWorker.ready.then(() => {
+          console.log(
+            'This web app is being served cache-first by a service '
+            + 'worker. To learn more, visit https://cra.link/PWA',
+          );
+        });
+      } else {
+        registerValidSW(swUrl, config);
+      }
+    });
+  }
 }
 
 export function unregister() {

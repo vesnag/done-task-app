@@ -1,8 +1,20 @@
+/* eslint-disable react/prop-types */
+
 import React, {
-  forwardRef, useCallback, useEffect, useImperativeHandle, useState,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
 } from 'react';
 import {
-  collection, deleteDoc, doc, getDocs, query, updateDoc, where,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 
 import ModalHandler from '../modals/ModalHandler';
@@ -21,7 +33,10 @@ const YourTasks = forwardRef(({ user }, ref) => {
     try {
       const q = query(collection(db, 'tasks'), where('userId', '==', user.uid));
       const querySnapshot = await getDocs(q);
-      const tasksList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const tasksList = querySnapshot.docs.map((taskDoc) => ({
+        id: taskDoc.id,
+        ...taskDoc.data(),
+      }));
       setTasks(tasksList);
     } catch (error) {
       console.error('Error fetching tasks:', error);

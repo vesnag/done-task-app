@@ -1,6 +1,9 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable import/order */
+
 import { FiLogOut } from 'react-icons/fi';
+import Logo from './Logo';
 import React from 'react';
-import Logo from './Logo'; // Ensure this import is correct
 
 function Header({ user, onLogout }) {
   return (
@@ -18,6 +21,7 @@ function Header({ user, onLogout }) {
         onClick={onLogout}
         className="p-2 bg-deepRed text-white rounded-md hover:bg-darkRed transition flex items-center justify-center"
         aria-label="Logout"
+        type="button"
       >
         <FiLogOut size={20} />
       </button>

@@ -1,7 +1,11 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable import/order */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+
 import React, { useEffect, useState } from 'react';
 
-import { FiX } from 'react-icons/fi';
 import ColorPicker from '../common/ColorPicker';
+import { FiX } from 'react-icons/fi';
 import TaskField from '../tasks/TaskField';
 
 function EditTaskModal({ task, onClose, onSave }) {
@@ -35,6 +39,7 @@ function EditTaskModal({ task, onClose, onSave }) {
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"
           aria-label="Close"
+          type="button" // Add type attribute
         >
           <FiX size={24} />
         </button>
@@ -52,19 +57,21 @@ function EditTaskModal({ task, onClose, onSave }) {
           placeholder="Description"
         />
         <div>
-          <label className="block text-lg font-medium text-gray-300">Task Color</label>
-          <ColorPicker selectedColor={color} onColorSelect={setColor} />
+          <label className="block text-lg font-medium text-gray-300" htmlFor="color-picker">Task Color</label>
+          <ColorPicker selectedColor={color} onColorSelect={setColor} id="color-picker" />
         </div>
         <div className="flex justify-end space-x-2 mt-4">
           <button
             onClick={handleSave}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            type="button" // Add type attribute
           >
             Save
           </button>
           <button
             onClick={onClose}
             className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            type="button" // Add type attribute
           >
             Cancel
           </button>
