@@ -1,18 +1,11 @@
 # DoneTask
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="90" height="90">
-  <circle cx="32" cy="32" r="30" fill="#1a202c"/>
-  <g fill="none" stroke="#f774aa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Gear Shape -->
-    <path d="M32 12v4M32 48v4M12 32h4M48 32h4M20.24 20.24l2.83 2.83M40.93 40.93l2.83 2.83M20.24 43.76l2.83-2.83M40.93 23.07l2.83-2.83"/>
-    <!-- Checkmark -->
-    <polyline points="24,32 30,38 40,28" stroke="#f774aa" stroke-width="4" fill="none"/>
-  </g>
-</svg>
+<img width="140" alt="Screenshot 2024-09-27 at 11 39 03" src="https://github.com/user-attachments/assets/53d18e15-2ae3-440b-afc7-6f6970f8b9c7">
+
 
 **DoneTask** is a task management app designed to help users keep track of their recurring tasks (e.g., daily, weekly, monthly). The app goes beyond simple reminders by learning from the user’s task completion habits and offering **smart notifications** based on actual behavior. DoneTask aims to reduce the cognitive load of planning and to provide personalized assistance to keep users on track.
 
-<img width="768" alt="AppScreenshot" src="https://github.com/user-attachments/assets/b847ac93-325c-4c4e-a2ff-7ba806761886">
+<img width="337" alt="Screenshot 2024-09-27 at 11 39 17" src="https://github.com/user-attachments/assets/0df043b9-cafb-425f-9321-0641ee2c76e5"><img width="768" alt="AppScreenshot" src="https://github.com/user-attachments/assets/b847ac93-325c-4c4e-a2ff-7ba806761886">
 
 ## Project Overview
 
@@ -85,10 +78,8 @@ REACT_APP_FIREBASE_APP_ID=1:123456789012:web:XXXXXXXXXXXXXXXX
 REACT_APP_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 
 REACT_APP_USE_FAKE_API=true
-
+```
 ## Visit the Website
 
 You can access the live version of the app here: [DoneTask Website](https://donetask-f64fe.web.app/)
 
-
-#add ErrorBoundary.js
