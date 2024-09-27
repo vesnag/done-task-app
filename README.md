@@ -12,7 +12,7 @@
 
 **DoneTask** is a task management app designed to help users keep track of their recurring tasks (e.g., daily, weekly, monthly). The app goes beyond simple reminders by learning from the user’s task completion habits and offering **smart notifications** based on actual behavior. DoneTask aims to reduce the cognitive load of planning and to provide personalized assistance to keep users on track.
 
-![App Screenshot](./images/appScreenshot.png)
+<img width="768" alt="AppScreenshot" src="https://github.com/user-attachments/assets/b847ac93-325c-4c4e-a2ff-7ba806761886">
 
 ## Project Overview
 
