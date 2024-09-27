@@ -10,7 +10,7 @@ const fakeProcessTaskInputWithLLM = async () => ({
 });
 
 const processTaskInputWithLLM = async (taskDescription) => {
-  if (process.env.USE_FAKE_API) {
+  if (process.env.USE_FAKE_OPEN_AI_API) {
     return fakeProcessTaskInputWithLLM(taskDescription);
   }
 
