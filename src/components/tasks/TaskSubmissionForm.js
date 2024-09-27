@@ -1,13 +1,14 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
+import React, { useState } from 'react';
 
-import ColorPicker from '../common/ColorPicker';
-import TaskField from './TaskField';
 import { db } from '../../services/firebaseConfig';
 import processTaskInputWithLLM from '../../services/openaiApi';
+import ColorPicker from '../common/ColorPicker';
+
+import TaskField from './TaskField';
 
 function TaskSubmissionForm({ user, onTaskAdded }) {
   const [taskTitle, setTaskTitle] = useState('');

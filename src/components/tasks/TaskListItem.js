@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 
-import { FiClock, FiEdit, FiTrash } from 'react-icons/fi';
-
 import React from 'react';
+import { FiClock, FiEdit, FiTrash } from 'react-icons/fi';
 
 function TaskListItem({
   task, onMarkAsDone, onViewHistory, onEdit, onDelete,

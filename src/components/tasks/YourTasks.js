@@ -1,12 +1,5 @@
 /* eslint-disable react/prop-types */
 
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react';
 import {
   collection,
   deleteDoc,
@@ -16,10 +9,18 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 
-import ModalHandler from '../modals/ModalHandler';
-import TaskListItem from './TaskListItem';
 import { db } from '../../services/firebaseConfig';
+import ModalHandler from '../modals/ModalHandler';
+
+import TaskListItem from './TaskListItem';
 
 const YourTasks = forwardRef(({ user }, ref) => {
   const [tasks, setTasks] = useState([]);
