@@ -32,16 +32,10 @@ const processTaskInputWithLLM = async (taskDescription) => {
     );
 
     const structuredData = response.data.choices[0].text.trim();
-
-    try {
-      return JSON.parse(structuredData);
-    } catch (jsonError) {
-      console.error('Error parsing JSON response from OpenAI API:', jsonError);
-      throw new Error('Invalid JSON response from OpenAI API');
-    }
+    return JSON.parse(structuredData);
   } catch (error) {
-    console.error('Error calling OpenAI API:', error);
-    throw error;
+    console.error('Error processing task input with LLM:', error);
+    throw new Error('Failed to process task input with LLM');
   }
 };
 

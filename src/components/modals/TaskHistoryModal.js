@@ -48,7 +48,7 @@ function TaskHistoryModal({ task, history = [], onClose }) {
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"
           aria-label="Close"
-          type="button" // Add type attribute
+          type="button"
         >
           <FiX size={24} />
         </button>
@@ -75,7 +75,7 @@ function TaskHistoryModal({ task, history = [], onClose }) {
           <button
             onClick={onClose}
             className="bg-lavenderPurple text-white px-4 py-2 rounded-lg hover:bg-deepLavender transition"
-            type="button" // Add type attribute
+            type="button"
           >
             Close
           </button>

@@ -1,7 +1,8 @@
+/* eslint-disable import/order */
 /* eslint-disable react/prop-types */
 
-import React from 'react';
 import { FiX } from 'react-icons/fi';
+import React from 'react';
 
 function CloseButton({ onClick }) {
   return (

@@ -39,7 +39,7 @@ function EditTaskModal({ task, onClose, onSave }) {
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"
           aria-label="Close"
-          type="button" // Add type attribute
+          type="button"
         >
           <FiX size={24} />
         </button>
@@ -64,14 +64,14 @@ function EditTaskModal({ task, onClose, onSave }) {
           <button
             onClick={handleSave}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            type="button" // Add type attribute
+            type="button"
           >
             Save
           </button>
           <button
             onClick={onClose}
             className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-            type="button" // Add type attribute
+            type="button"
           >
             Cancel
           </button>

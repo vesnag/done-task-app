@@ -23,7 +23,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const yourTasksRef = useRef(null); // Initialize yourTasksRef
+  const yourTasksRef = useRef(null);
 
   useEffect(() => {
     document.documentElement.classList.add('dark');
@@ -62,11 +62,11 @@ function App() {
       const currentToken = await getToken(messaging, {
         vapidKey: process.env.REACT_APP_VAPID_KEY,
       });
-      if (currentToken) {
-        await saveTokenToServer(userId, currentToken);
-      } else {
+      if (!currentToken) {
         console.log('No registration token available. Request permission to generate one.');
+        return;
       }
+      await saveTokenToServer(userId, currentToken);
     } catch (error) {
       console.error('An error occurred while retrieving FCM token:', error);
     }
@@ -75,11 +75,11 @@ function App() {
   const handleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      if (result.user) {
-        checkNotificationPermission();
-        requestNotificationPermission();
-        await getFcmToken(result.user.uid); // Get and save FCM token
-      }
+      if (!result.user) return;
+
+      checkNotificationPermission();
+      await requestNotificationPermission();
+      await getFcmToken(result.user.uid);
     } catch (error) {
       if (error.code === 'auth/popup-closed-by-user') {
         console.log('The popup was closed by the user before completing the sign-in.');
@@ -136,7 +136,6 @@ function App() {
             <>
               <Header user={user} onLogout={handleLogout} />
               <YourTasks ref={yourTasksRef} user={user} />
-              {' '}
               <div className="mt-6 flex flex-col space-y-8">
                 <button
                   onClick={toggleFormVisibility}

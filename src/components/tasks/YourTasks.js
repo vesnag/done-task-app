@@ -1,5 +1,13 @@
 /* eslint-disable react/prop-types */
+/* eslint-disable import/order */
 
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {
   collection,
   deleteDoc,
@@ -9,18 +17,10 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react';
 
-import { db } from '../../services/firebaseConfig';
 import ModalHandler from '../modals/ModalHandler';
-
 import TaskListItem from './TaskListItem';
+import { db } from '../../services/firebaseConfig';
 
 const YourTasks = forwardRef(({ user }, ref) => {
   const [tasks, setTasks] = useState([]);
@@ -45,9 +45,7 @@ const YourTasks = forwardRef(({ user }, ref) => {
   }, [user]);
 
   useEffect(() => {
-    if (user) {
-      fetchTasks();
-    }
+    if (user) fetchTasks();
   }, [user, fetchTasks]);
 
   useImperativeHandle(ref, () => ({

@@ -10,7 +10,6 @@ function Header({ user, onLogout }) {
     <header className="flex justify-between items-center mb-6">
       <Logo />
       {' '}
-      {/* Default size */}
       <h1 className="text-2xl sm:text-3xl font-extrabold text-lavenderPurple">
         Welcome,
         {' '}

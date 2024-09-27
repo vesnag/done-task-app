@@ -9,7 +9,6 @@ function LoginPrompt({ onLogin }) {
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Logo width={200} height={200} />
       {' '}
-      {/* Larger size */}
       <h1 className="text-3xl sm:text-4xl font-extrabold text-lavenderPurple mb-4">
         Welcome to DoneTask!
       </h1>
