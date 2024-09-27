@@ -22,7 +22,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "react-scripts start",
-    "build": "cross-env ESLINT_NO_DEV_ERRORS=true react-scripts build",
+    "build": "cross-env ESLINT_NO_DEV_ERRORS=true DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "ci-build": "npm run lint && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
