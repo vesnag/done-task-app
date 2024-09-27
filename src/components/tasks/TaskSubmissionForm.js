@@ -17,7 +17,6 @@ function TaskSubmissionForm({ user, onTaskAdded }) {
   const [loading, setLoading] = useState(false);
 
   const handleTaskSubmission = async () => {
-    console.log('handleTaskSubmission called');
     if (!taskTitle || !taskDescription) {
       setMessage('Please enter task title and description.');
       return;
@@ -27,7 +26,6 @@ function TaskSubmissionForm({ user, onTaskAdded }) {
     setMessage('');
 
     try {
-      console.log('Processing task input with LLM');
       const parsedTask = await processTaskInputWithLLM(taskDescription);
 
       const taskData = {
@@ -38,10 +36,8 @@ function TaskSubmissionForm({ user, onTaskAdded }) {
         userId: user.uid,
       };
 
-      console.log('Adding new task');
       const taskRef = await addDoc(collection(db, 'tasks'), taskData);
       setMessage('Task submitted successfully!');
-      console.log('Task added, calling onTaskAdded');
       if (onTaskAdded) {
         onTaskAdded({ id: taskRef.id, ...taskData }); // Pass the new task data
       }

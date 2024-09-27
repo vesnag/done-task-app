@@ -21,8 +21,6 @@ const showNotification = (title, options) => {
 };
 
 onMessage(messaging, (payload) => {
-  console.log('Message received in foreground: ', payload);
-
   const notificationTitle = payload.notification?.title || 'Foreground Notification';
   const notificationOptions = {
     body: payload.notification?.body || 'You have a new message.',

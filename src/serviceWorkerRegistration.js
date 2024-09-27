@@ -10,35 +10,26 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      const reg = registration; // Create a new variable to avoid reassigning the parameter
+      const reg = registration;
       reg.onupdatefound = () => {
         const installingWorker = reg.installing;
         if (installingWorker == null) {
           return;
         }
         installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-              // At this point, the updated pre-cached content has been fetched,
-              // but the previous service worker will still serve the older content until all
-              // client tabs are closed.
-              console.log(
-                'New content is available and will be used when all '
-                + 'tabs for this page are closed. See https://cra.link/PWA.',
-              );
+          if (installingWorker.state !== 'installed') {
+            return;
+          }
 
-              if (config && config.onUpdate) {
-                config.onUpdate(reg);
-              }
-            } else {
-              // At this point, everything has been pre-cached.
-              // It's the perfect time to display a "Content is cached for offline use." message.
-              console.log('Content is cached for offline use.');
-
-              if (config && config.onSuccess) {
-                config.onSuccess(reg);
-              }
+          if (navigator.serviceWorker.controller) {
+            if (config && config.onUpdate) {
+              config.onUpdate(reg);
             }
+            return;
+          }
+
+          if (config && config.onSuccess) {
+            config.onSuccess(reg);
           }
         };
       };
@@ -46,6 +37,7 @@ function registerValidSW(swUrl, config) {
     .catch((error) => {
       console.error('Error during service worker registration:', error);
     });
+  }
 }
 
 function checkValidServiceWorker(swUrl, config) {

@@ -3,17 +3,13 @@ import axios from 'axios';
 const API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 const OPENAI_API_URL = 'https://api.openai.com/v1/completions';
 
-const fakeProcessTaskInputWithLLM = async (taskDescription) => {
-  console.log('Using fake API for task description:', taskDescription);
-  return {
-    frequency: 'weekly',
-    day: 'Monday',
-    time: '10:00 AM',
-  };
-};
+const fakeProcessTaskInputWithLLM = async () => ({
+  frequency: 'weekly',
+  day: 'Monday',
+  time: '10:00 AM',
+});
 
 const processTaskInputWithLLM = async (taskDescription) => {
-  console.log('processTaskInputWithLLM use fake API:', process.env.USE_FAKE_API);
   if (process.env.USE_FAKE_API) {
     return fakeProcessTaskInputWithLLM(taskDescription);
   }
@@ -36,7 +32,6 @@ const processTaskInputWithLLM = async (taskDescription) => {
     );
 
     const structuredData = response.data.choices[0].text.trim();
-    console.log('Raw response from OpenAI API:', structuredData);
 
     try {
       return JSON.parse(structuredData);

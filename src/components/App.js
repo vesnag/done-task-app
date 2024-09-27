@@ -1,21 +1,20 @@
-import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { deleteDoc, doc, setDoc } from 'firebase/firestore';
-import { getToken } from 'firebase/messaging';
 import React, { useEffect, useRef, useState } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-
 import {
   auth,
   db,
   googleProvider,
   messaging,
 } from '../services/firebaseConfig';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 import Header from './common/Header';
 import LoginPrompt from './common/LoginPrompt';
 import NotificationButton from './common/NotificationButton';
+import { BrowserRouter as Router } from 'react-router-dom';
 import TaskSubmissionForm from './tasks/TaskSubmissionForm';
 import YourTasks from './tasks/YourTasks';
+import { getToken } from 'firebase/messaging';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -41,12 +40,7 @@ function App() {
 
   const requestNotificationPermission = async () => {
     try {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        console.log('Notification permission granted.');
-      } else {
-        console.log('Notification permission denied.');
-      }
+      await Notification.requestPermission();
     } catch (error) {
       console.error('Error requesting notification permission:', error);
     }
@@ -106,7 +100,6 @@ function App() {
     try {
       if (user) {
         await deleteDoc(doc(db, 'users', user.uid));
-        console.log('FCM Token removed from server.');
       }
       setNotificationsEnabled(false);
     } catch (error) {
@@ -127,7 +120,6 @@ function App() {
   };
 
   const onTaskAdded = (newTask) => {
-    console.log('Task added, refresh the task list');
     if (yourTasksRef.current) {
       yourTasksRef.current.addTask(newTask);
     }
