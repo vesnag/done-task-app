@@ -32,7 +32,7 @@ function TaskSubmissionForm({ user, onTaskAdded }) {
       const taskData = {
         title: taskTitle,
         description: taskDescription,
-        task: parsedTask,
+        schedule: parsedTask,
         color: taskColor,
         userId: user.uid,
       };

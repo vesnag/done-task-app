@@ -7,11 +7,14 @@ import React, { useEffect, useState } from 'react';
 import ColorPicker from '../common/ColorPicker';
 import { FiX } from 'react-icons/fi';
 import TaskField from '../tasks/TaskField';
+import processTaskInputWithLLM from '../../services/openaiApi';
 
 function EditTaskModal({ task, onClose, onSave }) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [color, setColor] = useState(task.color);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -25,11 +28,34 @@ function EditTaskModal({ task, onClose, onSave }) {
     };
   }, [onClose]);
 
-  const handleSave = () => {
-    const updatedTask = {
-      ...task, title, description, color,
-    };
-    onSave(updatedTask);
+  const handleSave = async () => {
+    if (!title || !description) {
+      setMessage('Please enter task title and description.');
+      return;
+    }
+
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const parsedTask = await processTaskInputWithLLM(description);
+
+      const updatedTask = {
+        ...task,
+        title,
+        description,
+        schedule: parsedTask,
+        color,
+      };
+
+      onSave(updatedTask);
+      setMessage('Task updated successfully!');
+    } catch (error) {
+      console.error('Error updating task:', error);
+      setMessage(error.message || 'Error updating task.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,12 +75,14 @@ function EditTaskModal({ task, onClose, onSave }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title"
+          disabled={loading}
         />
         <TaskField
           type="textarea"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
+          disabled={loading}
         />
         <div>
           <label className="block text-lg font-medium text-gray-300" htmlFor="color-picker">Task Color</label>
@@ -63,10 +91,11 @@ function EditTaskModal({ task, onClose, onSave }) {
         <div className="flex justify-end space-x-2 mt-4">
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${loading ? 'cursor-not-allowed' : ''}`}
             type="button"
+            disabled={loading}
           >
-            Save
+            {loading ? 'Processing...' : 'Save'}
           </button>
           <button
             onClick={onClose}
@@ -76,6 +105,9 @@ function EditTaskModal({ task, onClose, onSave }) {
             Cancel
           </button>
         </div>
+        {message && (
+          <p className="mt-4 text-center text-rosePink font-medium">{message}</p>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable import/order */
 
 import React, {
@@ -21,6 +20,9 @@ import {
 import ModalHandler from '../modals/ModalHandler';
 import TaskListItem from './TaskListItem';
 import { db } from '../../services/firebaseConfig';
+import {
+  sortTasksByNextScheduledTime,
+} from '../../utils/scheduleUtils';
 
 const YourTasks = forwardRef(({ user }, ref) => {
   const [tasks, setTasks] = useState([]);
@@ -38,7 +40,9 @@ const YourTasks = forwardRef(({ user }, ref) => {
         id: taskDoc.id,
         ...taskDoc.data(),
       }));
-      setTasks(tasksList);
+
+      const sortedTasks = sortTasksByNextScheduledTime(tasksList, new Date());
+      setTasks(sortedTasks);
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
@@ -50,7 +54,7 @@ const YourTasks = forwardRef(({ user }, ref) => {
 
   useImperativeHandle(ref, () => ({
     addTask(newTask) {
-      setTasks((prevTasks) => [...prevTasks, newTask]);
+      setTasks((prevTasks) => sortTasksByNextScheduledTime([...prevTasks, newTask], new Date()));
     },
   }));
 
@@ -71,7 +75,7 @@ const YourTasks = forwardRef(({ user }, ref) => {
   };
 
   const handleMarkAsDone = async (task) => {
-    const timestamp = new Date();
+    const timestamp = new Date().toISOString();
     try {
       const taskRef = doc(db, 'tasks', task.id);
       await updateDoc(taskRef, {

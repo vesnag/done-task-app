@@ -3,7 +3,7 @@
 <img width="140" alt="Screenshot 2024-09-27 at 11 39 03" src="https://github.com/user-attachments/assets/53d18e15-2ae3-440b-afc7-6f6970f8b9c7">
 
 
-**DoneTask** is a task management app designed to help users keep track of their recurring tasks (e.g., daily, weekly, monthly). The app goes beyond simple reminders by learning from the user’s task completion habits and offering **smart notifications** based on actual behavior. DoneTask aims to reduce the cognitive load of planning and to provide personalized assistance to keep users on track.
+**DoneTask** is a task management app designed to help users keep track of their recurring tasks (e.g., daily, weekly, monthly). The app goes beyond simple reminders by learning from the user’s task completion habits and offering **smart notifications** based on actual behavior.
 
 <img width="337" alt="Screenshot 2024-09-27 at 11 39 17" src="https://github.com/user-attachments/assets/0df043b9-cafb-425f-9321-0641ee2c76e5"><img width="768" alt="AppScreenshot" src="https://github.com/user-attachments/assets/b847ac93-325c-4c4e-a2ff-7ba806761886">
 
@@ -11,7 +11,7 @@
 
 ### Current Features:
 - **Google Authentication**: Users can log in with their Google accounts using Firebase Authentication.
-- **Simple UI**: After logging in, users are greeted with a personalized message and their profile picture.
+- **Simple UI**: After logging in, users are greeted with a personalized message.
 - **Push Notifications**: Basic setup for push notifications, allowing users to receive notifications when triggered manually.
 - **Service Worker Integration**: Notifications are handled using a service worker to show background notifications even when the app is not in focus.
 
@@ -65,21 +65,44 @@ The app will use AI/ML to:
 To run this project, you will need to add the following environment variables to your `.env` file:
 
 ```plaintext
+# OpenAI API key for accessing OpenAI services
 REACT_APP_OPENAI_API_KEY=sk-proj-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-REACT_APP_VAPID_KEY=BK2gx6QeH4GW-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-SKIP_PREFLIGHT_CHECK=true
 
+# VAPID key for Web Push Notifications
+REACT_APP_VAPID_KEY=BK2gx6QeH4GW-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+# Firebase API key for accessing Firebase services
 REACT_APP_FIREBASE_API_KEY=AIzaSyA5Qj3cXXXXXXXXXXXXXXXXXXXXXXXX
+
+# Firebase Auth domain for authentication
 REACT_APP_FIREBASE_AUTH_DOMAIN=your-app.firebaseapp.com
+
+# Firebase project ID
 REACT_APP_FIREBASE_PROJECT_ID=your-app
+
+# Firebase storage bucket for file storage
 REACT_APP_FIREBASE_STORAGE_BUCKET=your-app.appspot.com
+
+# Firebase messaging sender ID for cloud messaging
 REACT_APP_FIREBASE_MESSAGING_SENDER_ID=123456789012
+
+# Firebase app ID
 REACT_APP_FIREBASE_APP_ID=1:123456789012:web:XXXXXXXXXXXXXXXX
+
+# Firebase measurement ID for analytics
 REACT_APP_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 
-REACT_APP_USE_FAKE_OPEN_AI_API=true
+# Flag to use a fake OpenAI API for testing purposes
+REACT_APP_USE_FAKE_OPENAI_API=true
+
+# Skip preflight checks during the build process
+SKIP_PREFLIGHT_CHECK=true
 ```
 ## Visit the Website
 
 You can access the live version of the app here: [DoneTask Website](https://donetask-f64fe.web.app/)
 
+### Additional Notes
+- **Simple Sorting**: Tasks are sorted by their scheduled day. Tasks for today come first, followed by tasks for the rest of the week. This makes it easy for users to see and prioritize today's tasks.
+
+- **Future Enhancements**: In the future, the sorting will be smarter. It will consider how often tasks are completed, user habits, and dynamic scheduling to make task management more personalized and efficient.
